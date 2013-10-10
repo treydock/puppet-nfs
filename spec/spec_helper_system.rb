@@ -23,7 +23,8 @@ RSpec.configure do |c|
 
     shell('puppet module install puppetlabs-stdlib --modulepath /etc/puppet/modules --force')
     shell('puppet module install puppetlabs-firewall --modulepath /etc/puppet/modules --force')
-    
+    shell('puppet module install domcleal/augeasproviders --modulepath /etc/puppet/modules --force')
+
     # Install nfs module
     puppet_module_install(:source => proj_root, :module_name => 'nfs')
   end

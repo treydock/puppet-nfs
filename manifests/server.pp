@@ -44,8 +44,6 @@ class nfs::server (
   $rpc_nfsd_count       = $nfs::params::rpc_nfsd_count,
   $nfs_port             = $nfs::params::nfs_port,
   $rquotad_port         = $nfs::params::rquotad_port,
-  $lockd_tcpport        = $nfs::params::lockd_tcpport,
-  $lockd_udpport        = $nfs::params::lockd_udpport,
   $mountd_port          = $nfs::params::mountd_port,
   $with_rdma            = false,
   $rdma_port            = $nfs::params::rdma_port
@@ -73,46 +71,34 @@ class nfs::server (
     false => undef,
   }
 
+  $config_path = $nfs::config_path
+
   if $manage_firewall {
-    firewall { '103 nfs tcp':
+    firewall { '105 nfs tcp':
       ensure  => present,
       action  => 'accept',
       dport   => $nfs_port,
       chain   => 'INPUT',
       proto   => 'tcp',
     }
-    firewall { '104 nfs udp':
+    firewall { '106 nfs udp':
       ensure  => present,
       action  => 'accept',
       dport   => $nfs_port,
       chain   => 'INPUT',
       proto   => 'udp',
     }
-    firewall { '105 rquotad tcp':
+    firewall { '107 rquotad tcp':
       ensure  => present,
       action  => 'accept',
       dport   => $rquotad_port,
       chain   => 'INPUT',
       proto   => 'tcp',
     }
-    firewall { '106 rquotad udp':
+    firewall { '108 rquotad udp':
       ensure  => present,
       action  => 'accept',
       dport   => $rquotad_port,
-      chain   => 'INPUT',
-      proto   => 'udp',
-    }
-    firewall { '107 lockd tcp':
-      ensure  => present,
-      action  => 'accept',
-      dport   => $lockd_tcpport,
-      chain   => 'INPUT',
-      proto   => 'tcp',
-    }
-    firewall { '108 lockd udp':
-      ensure  => present,
-      action  => 'accept',
-      dport   => $lockd_udpport,
       chain   => 'INPUT',
       proto   => 'udp',
     }
@@ -149,7 +135,19 @@ class nfs::server (
     }
   }
 
-  File <| title == '/etc/sysconfig/nfs' |> { content => template('nfs/nfs.erb') }
+  Shellvar {
+    ensure  => present,
+    target  => $config_path,
+    notify  => Service['nfs'],
+  }
+
+  shellvar { 'RQUOTAD_PORT': value => $rquotad_port }
+  shellvar { 'MOUNTD_PORT': value => $mountd_port }
+  if $with_rdma { shellvar { 'RDMA_PORT': value => $rdma_port } }
+
+  shellvar { 'RPCNFSDCOUNT': value => $rpc_nfsd_count }
+
+#  File <| title == '/etc/sysconfig/nfs' |> { content => template('nfs/nfs.erb') }
 
   service { 'nfs':
     ensure      => $service_ensure_real,

@@ -13,15 +13,43 @@ describe 'nfs::server' do
     let(:default_params) {{}}
   end
 
-  it "should create valid content for /etc/sysconfig/nfs" do
-    verify_contents(subject, '/etc/sysconfig/nfs', [
-      'RQUOTAD_PORT=875',
-      'LOCKD_TCPPORT=32803',
-      'LOCKD_UDPPORT=32769',
-      'RPCNFSDCOUNT=8',
-      'MOUNTD_PORT=892',
-      '#RDMA_PORT=20049',
-    ])
+  it do
+    should contain_shellvar('RQUOTAD_PORT').with({
+      'ensure'  => 'present',
+      'target'  => '/etc/sysconfig/nfs',
+      'notify'  => 'Service[nfs]',
+      'value'   => '875',
+    })
+  end
+
+  it do
+    should contain_shellvar('MOUNTD_PORT').with({
+      'ensure'  => 'present',
+      'target'  => '/etc/sysconfig/nfs',
+      'notify'  => 'Service[nfs]',
+      'value'   => '892',
+    })
+  end
+
+  it do
+    should contain_service('nfslock').with({
+      'ensure'      => 'running',
+      'enable'      => 'true',
+      'name'        => 'nfslock',
+      'hasstatus'   => 'true',
+      'hasrestart'  => 'true',
+    })
+  end
+
+  it { should_not contain_shellvar('RDMA_PORT') }
+
+  it do
+    should contain_shellvar('RPCNFSDCOUNT').with({
+      'ensure'  => 'present',
+      'target'  => '/etc/sysconfig/nfs',
+      'notify'  => 'Service[nfs]',
+      'value'   => '8',
+    })
   end
 
   it do
@@ -53,16 +81,26 @@ describe 'nfs::server' do
   context "with rpc_nfsd_count => 16" do
     let(:params) {{ :rpc_nfsd_count => 16 }}
 
-    it "should set RPCNFSDCOUNT=16" do
-      verify_contents(subject, '/etc/sysconfig/nfs', ['RPCNFSDCOUNT=16'])
+    it do
+      should contain_shellvar('RPCNFSDCOUNT').with({
+        'ensure'  => 'present',
+        'target'  => '/etc/sysconfig/nfs',
+        'notify'  => 'Service[nfs]',
+        'value'   => '16',
+      })
     end
   end
 
   context 'with with_rdma => true' do
     let(:params) {{ :with_rdma => true }}
 
-    it "should set RDMA_PORT=20049" do
-      verify_contents(subject, '/etc/sysconfig/nfs', ['RDMA_PORT=20049'])
+    it do
+      should contain_shellvar('RDMA_PORT').with({
+        'ensure'  => 'present',
+        'target'  => '/etc/sysconfig/nfs',
+        'notify'  => 'Service[nfs]',
+        'value'   => '20049',
+      })
     end
   end
 end

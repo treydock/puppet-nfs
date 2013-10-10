@@ -1,6 +1,7 @@
 def client_default_firewall_resources
   [
     {:name => 'portmapper', :number => ['101','102'], :port => '111'},
+    {:name => 'lockd', :number => ['103','104'], :port => ['32803','32769']},
   ]
 end
 
@@ -9,7 +10,7 @@ shared_examples "nfs::client firewall" do
   context "with manage_firewall => true" do
     let(:params) { default_params.merge({ :manage_firewall => true }) }
 
-    it { should have_firewall_resource_count(2) }
+    it { should have_firewall_resource_count(4) }
 
     client_default_firewall_resources.each do |firewall|
       it do

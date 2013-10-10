@@ -40,7 +40,9 @@ class nfs::client (
   $service_hasstatus    = $nfs::params::client_service_hasstatus,
   $service_hasrestart   = $nfs::params::client_service_hasrestart,
   $manage_firewall      = true,
-  $portmapper_port      = $nfs::params::portmapper_port
+  $portmapper_port      = $nfs::params::portmapper_port,
+  $lockd_tcpport        = $nfs::params::lockd_tcpport,
+  $lockd_udpport        = $nfs::params::lockd_udpport
 ) inherits nfs::params {
 
   require 'nfs'
@@ -61,6 +63,8 @@ class nfs::client (
     default   => $service_enable,
   }
 
+  $config_path = $nfs::config_path
+
   if $manage_firewall {
     firewall { '101 portmapper tcp':
       ensure  => present,
@@ -76,7 +80,30 @@ class nfs::client (
       chain   => 'INPUT',
       proto   => 'udp',
     }
+    firewall { '103 lockd tcp':
+      ensure  => present,
+      action  => 'accept',
+      dport   => $lockd_tcpport,
+      chain   => 'INPUT',
+      proto   => 'tcp',
+    }
+    firewall { '104 lockd udp':
+      ensure  => present,
+      action  => 'accept',
+      dport   => $lockd_udpport,
+      chain   => 'INPUT',
+      proto   => 'udp',
+    }
   }
+
+  Shellvar {
+    ensure  => present,
+    target  => $config_path,
+    notify  => Service['nfslock'],
+  }
+
+  shellvar { 'LOCKD_TCPPORT': value   => $lockd_tcpport }
+  shellvar { 'LOCKD_UDPPORT': value => $lockd_udpport }
 
   service { 'nfslock':
     ensure      => $service_ensure_real,

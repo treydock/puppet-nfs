@@ -32,8 +32,7 @@ class { 'nfs::server': }
 
   describe service('nfs') do
     it { should be_enabled }
-    # Running test will always fail unless Kerberos is configured before NFS
-    it { should be_running.with_process_name('nfsd') }
+    it { should be_running }
   end
 =begin
   describe command('service nfs status') do

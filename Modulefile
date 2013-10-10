@@ -10,3 +10,4 @@ project_page 'UNKNOWN'
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>=3.2.0 <5.0.0'
 dependency 'puppetlabs/firewall', '>=0.4.0'
+dependency 'domcleal/augeasproviders', '>=1.0.0'

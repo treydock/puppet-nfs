@@ -7,7 +7,7 @@ group :development, :test do
   gem 'puppet-lint', '~> 0.3.2'
   gem 'travis-lint'
   gem 'rspec-system-puppet', '~> 2.0'
-  gem 'serverspec', :git => 'git://github.com/treydock/serverspec.git', :branch => 'be_running_with_process_name'
+  gem 'serverspec', '~> 0.10'
   #  gem 'rspec-system-serverspec', '~> 1.0'
   # Needed to use latest serverspec gem
   # PR submitted: https://github.com/puppetlabs/rspec-system-serverspec/pull/3

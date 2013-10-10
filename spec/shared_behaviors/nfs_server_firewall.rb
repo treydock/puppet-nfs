@@ -1,8 +1,7 @@
 def server_default_firewall_resources
   [
-    {:name => 'nfs', :number => ['103','104'], :port => '2049'},
-    {:name => 'rquotad', :number => ['105','106'], :port => '875'},
-    {:name => 'lockd', :number => ['107','108'], :port => ['32803','32769']},
+    {:name => 'nfs', :number => ['105','106'], :port => '2049'},
+    {:name => 'rquotad', :number => ['107','108'], :port => '875'},
     {:name => 'mountd', :number => ['109','110'], :port => '892'},
   ]
 end
@@ -74,7 +73,7 @@ shared_examples "nfs::server firewall" do
   context "with manage_firewall => false" do
     let(:params) { default_params.merge({ :manage_firewall => false }) }
 
-    it { should have_firewall_resource_count(2) }
+    it { should have_firewall_resource_count(4) }
 
     server_default_firewall_resources.each do |firewall|
       it { should_not contain_firewall("#{firewall[:number][0]} #{firewall[:name]} tcp") }

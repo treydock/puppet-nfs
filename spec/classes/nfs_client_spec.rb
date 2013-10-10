@@ -16,6 +16,24 @@ describe 'nfs::client' do
   end
 
   it do
+    should contain_shellvar('LOCKD_TCPPORT').with({
+      'ensure'  => 'present',
+      'target'  => '/etc/sysconfig/nfs',
+      'notify'  => 'Service[nfslock]',
+      'value'   => '32803',
+    })
+  end
+
+  it do
+    should contain_shellvar('LOCKD_UDPPORT').with({
+      'ensure'  => 'present',
+      'target'  => '/etc/sysconfig/nfs',
+      'notify'  => 'Service[nfslock]',
+      'value'   => '32769',
+    })
+  end
+
+  it do
     should contain_service('nfslock').with({
       'ensure'      => 'running',
       'enable'      => 'true',
