@@ -43,13 +43,35 @@ describe 'nfs::client' do
     })
   end
 
-  context 'with service_ensure => "undef"' do
-    let(:params) {{ :service_ensure => "undef" }}
-    it { should contain_service('nfslock').with_ensure(nil) }
+  # Test service ensure and enable 'magic' values
+  [
+    'undef',
+    'UNSET',
+  ].each do |v|
+    context "with service_ensure => '#{v}'" do
+      let(:params) {{ :service_ensure => v }}
+      it { should contain_service('nfslock').with_ensure(nil) }
+    end
+
+    context "with service_enable => '#{v}'" do
+      let(:params) {{ :service_enable => v }}
+      it { should contain_service('nfslock').with_enable(nil) }
+    end
   end
 
-  context 'with service_enable => "undef"' do
-    let(:params) {{ :service_enable => "undef" }}
-    it { should contain_service('nfslock').with_enable(nil) }
+  context 'with nfs_mounts defined' do
+    let :params do
+      {
+        :nfs_mounts => {
+          'foo' => {
+            'device'  => '192.168.1.1:/foo',
+            'path'    => '/foo',
+            'options' => 'rw,nfsvers=3',
+          },
+        }
+      }
+    end
+
+    it { should contain_nfs__mount('foo') }
   end
 end

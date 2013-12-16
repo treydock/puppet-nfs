@@ -56,8 +56,9 @@ define nfs::mount (
   $path_params = { 'ensure' => 'directory' }
   ensure_resource( 'file', $path_real, $path_params )
 
-  mount { $path_real:
+  mount { $name:
     ensure  => $ensure,
+    name    => $path_real,
     atboot  => $atboot,
     device  => $device,
     fstype  => 'nfs',

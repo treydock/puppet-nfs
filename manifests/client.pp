@@ -42,7 +42,8 @@ class nfs::client (
   $manage_firewall      = true,
   $portmapper_port      = $nfs::params::portmapper_port,
   $lockd_tcpport        = $nfs::params::lockd_tcpport,
-  $lockd_udpport        = $nfs::params::lockd_udpport
+  $lockd_udpport        = $nfs::params::lockd_udpport,
+  $nfs_mounts           = {}
 ) inherits nfs::params {
 
   require 'nfs'
@@ -50,17 +51,22 @@ class nfs::client (
   include nfs::netfs
 
   validate_bool($manage_firewall)
+  validate_hash($nfs_mounts)
+
+  if !empty($nfs_mounts) {
+    create_resources('nfs::mount', $nfs_mounts)
+  }
 
   # This gives the option to not manage the service 'ensure' state.
   $service_ensure_real  = $service_ensure ? {
-    'undef'   => undef,
-    default   => $service_ensure,
+    /UNSET|undef/ => undef,
+    default       => $service_ensure,
   }
 
   # This gives the option to not manage the service 'enable' state.
   $service_enable_real  = $service_enable ? {
-    'undef'   => undef,
-    default   => $service_enable,
+    /UNSET|undef/ => undef,
+    default       => $service_enable,
   }
 
   $config_path = $nfs::config_path
