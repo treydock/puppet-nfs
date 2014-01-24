@@ -63,20 +63,7 @@ describe 'nfs::server' do
     })
   end
 
-  context 'with service_ensure => "undef"' do
-    let(:params) {{ :service_ensure => "undef" }}
-    it { should contain_service('nfs').with_ensure(nil) }
-  end
-
-  context 'with service_enable => "undef"' do
-    let(:params) {{ :service_enable => "undef" }}
-    it { should contain_service('nfs').with_enable(nil) }
-  end
-
-  context 'with service_autorestart => false' do
-    let(:params) {{ :service_autorestart => false }}
-    it { should contain_service('nfs').with_subscribe(nil) }
-  end
+  it { should_not contain_server('nfs-rdma') }
 
   context "with rpc_nfsd_count => 16" do
     let(:params) {{ :rpc_nfsd_count => 16 }}
@@ -101,6 +88,50 @@ describe 'nfs::server' do
         'notify'  => 'Service[nfs]',
         'value'   => '20049',
       })
+    end
+
+    it do
+      should contain_service('nfs-rdma').with({
+        'ensure'      => 'running',
+        'enable'      => 'true',
+        'name'        => 'nfs-rdma',
+        'hasstatus'   => 'true',
+        'hasrestart'  => 'true',
+        'require'     => 'Package[rdma]',
+      })
+    end
+  end
+
+  context 'with service_autorestart => false' do
+    let(:params) {{ :service_autorestart => false }}
+    it { should contain_service('nfs').with_subscribe(nil) }
+  end
+
+  # Test service ensure and enable 'magic' values
+  [
+    'undef',
+    'UNSET',
+  ].each do |v|
+    context "with service_ensure => '#{v}'" do
+      let(:params) {{ :service_ensure => v }}
+      it { should contain_service('nfs').with_ensure(nil) }
+    end
+
+    context "with service_enable => '#{v}'" do
+      let(:params) {{ :service_enable => v }}
+      it { should contain_service('nfs').with_enable(nil) }
+    end
+  end
+
+  # Test boolean validation
+  [
+    'service_autorestart',
+    'manage_firewall',
+    'with_rdma',
+  ].each do |param|
+    context "with #{param} => 'foo'" do
+      let(:params) {{ param.to_sym => 'foo' }}
+      it { expect { should create_class('nfs::server') }.to raise_error(Puppet::Error, /is not a boolean/) }
     end
   end
 end

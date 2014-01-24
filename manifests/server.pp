@@ -35,11 +35,11 @@
 #
 class nfs::server (
   $service_name         = $nfs::params::server_service_name,
-  $service_ensure       = $nfs::params::server_service_ensure,
-  $service_enable       = $nfs::params::server_service_enable,
+  $service_ensure       = 'running',
+  $service_enable       = true,
   $service_hasstatus    = $nfs::params::server_service_hasstatus,
   $service_hasrestart   = $nfs::params::server_service_hasrestart,
-  $service_autorestart  = $nfs::params::server_service_autorestart,
+  $service_autorestart  = true,
   $manage_firewall      = true,
   $rpc_nfsd_count       = $nfs::params::rpc_nfsd_count,
   $nfs_port             = $nfs::params::nfs_port,
@@ -51,19 +51,20 @@ class nfs::server (
 
   require 'nfs::client'
 
+  validate_bool($service_autorestart)
   validate_bool($manage_firewall)
   validate_bool($with_rdma)
 
   # This gives the option to not manage the service 'ensure' state.
   $service_ensure_real  = $service_ensure ? {
-    'undef'   => undef,
-    default   => $service_ensure,
+    /UNSET|undef/ => undef,
+    default       => $service_ensure,
   }
 
   # This gives the option to not manage the service 'enable' state.
   $service_enable_real  = $service_enable ? {
-    'undef'   => undef,
-    default   => $service_enable,
+    /UNSET|undef/ => undef,
+    default       => $service_enable,
   }
 
   $service_subscribe = $service_autorestart ? {
@@ -156,6 +157,17 @@ class nfs::server (
     hasstatus   => $service_hasstatus,
     hasrestart  => $service_hasrestart,
     subscribe   => $service_subscribe,
+  }
+
+  if $with_rdma {
+    service { 'nfs-rdma':
+      ensure      => running,
+      enable      => true,
+      name        => 'nfs-rdma',
+      hasstatus   => true,
+      hasrestart  => true,
+      require     => Package['rdma'],
+    }
   }
 
   Service['rpcbind'] -> Service['nfslock'] -> Service['nfs']

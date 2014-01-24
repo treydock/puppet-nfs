@@ -1,4 +1,9 @@
 language: ruby
+before_install:
+  - gem update bundler
+  - bundle --version
+  - gem update --system 2.1.11
+  - gem --version
 bundler_args: --without development
 script: "bundle exec rake ci"
 rvm:
@@ -12,6 +17,7 @@ env:
   - PUPPET_GEM_VERSION="~> 3.1.0"
   - PUPPET_GEM_VERSION="~> 3.2.0"
   - PUPPET_GEM_VERSION="~> 3.3.0"
+  - PUPPET_GEM_VERSION="~> 3.4.0"
 matrix:
   allow_failures:
     - rvm: ruby-head

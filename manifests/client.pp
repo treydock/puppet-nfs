@@ -35,8 +35,8 @@
 #
 class nfs::client (
   $service_name         = $nfs::params::client_service_name,
-  $service_ensure       = $nfs::params::client_service_ensure,
-  $service_enable       = $nfs::params::client_service_enable,
+  $service_ensure       = 'running',
+  $service_enable       = true,
   $service_hasstatus    = $nfs::params::client_service_hasstatus,
   $service_hasrestart   = $nfs::params::client_service_hasrestart,
   $manage_firewall      = true,

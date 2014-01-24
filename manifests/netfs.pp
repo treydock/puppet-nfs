@@ -35,22 +35,22 @@
 #
 class nfs::netfs (
 $service_name         = $nfs::params::netfs_service_name,
-$service_ensure       = $nfs::params::netfs_service_ensure,
-$service_enable       = $nfs::params::netfs_service_enable,
+$service_ensure       = 'running',
+$service_enable       = true,
 $service_hasstatus    = $nfs::params::netfs_service_hasstatus,
 $service_hasrestart   = $nfs::params::netfs_service_hasrestart
 ) inherits nfs::params {
 
   # This gives the option to not manage the service 'ensure' state.
   $service_ensure_real  = $service_ensure ? {
-    'undef'   => undef,
-    default   => $service_ensure,
+    /UNSET|undef/ => undef,
+    default       => $service_ensure,
   }
 
   # This gives the option to not manage the service 'enable' state.
   $service_enable_real  = $service_enable ? {
-    'undef'   => undef,
-    default   => $service_enable,
+    /UNSET|undef/ => undef,
+    default       => $service_enable,
   }
 
   if !defined(Service['netfs']) {

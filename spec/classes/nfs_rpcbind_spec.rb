@@ -26,13 +26,19 @@ describe 'nfs::rpcbind' do
     })
   end
 
-  context 'with service_ensure => "undef"' do
-    let(:params) {{ :service_ensure => "undef" }}
-    it { should contain_service('rpcbind').with_ensure(nil) }
-  end
+  # Test service ensure and enable 'magic' values
+  [
+    'undef',
+    'UNSET',
+  ].each do |v|
+    context "with service_ensure => '#{v}'" do
+      let(:params) {{ :service_ensure => v }}
+      it { should contain_service('rpcbind').with_ensure(nil) }
+    end
 
-  context 'with service_enable => "undef"' do
-    let(:params) {{ :service_enable => "undef" }}
-    it { should contain_service('rpcbind').with_enable(nil) }
+    context "with service_enable => '#{v}'" do
+      let(:params) {{ :service_enable => v }}
+      it { should contain_service('rpcbind').with_enable(nil) }
+    end
   end
 end
