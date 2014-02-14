@@ -7,7 +7,7 @@ describe 'nfs::server' do
 
   it { should create_class('nfs::server') }
   it { should contain_class('nfs::params') }
-  it { should include_class('nfs::client') }
+  it { should contain_class('nfs::client') }
 
   it_behaves_like "nfs::server firewall" do
     let(:default_params) {{}}

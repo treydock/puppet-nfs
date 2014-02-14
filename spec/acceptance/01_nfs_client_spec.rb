@@ -1,17 +1,14 @@
-require 'spec_helper_system'
+require 'spec_helper_acceptance'
 
-describe 'nfs::server class:' do
+describe 'nfs::client class:' do
   context 'with default parameters' do
     it 'should run successfully' do
       pp =<<-EOS
-  class { 'nfs::server': }
+  class { 'nfs::client': }
       EOS
   
-      puppet_apply(pp) do |r|
-       r.exit_code.should_not == 1
-       r.refresh
-       r.exit_code.should be_zero
-      end
+      apply_manifest(pp, :catch_failures => true)
+      expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
     end
 
     describe service('netfs') do
@@ -25,11 +22,6 @@ describe 'nfs::server class:' do
     end
 
     describe service('nfslock') do
-      it { should be_enabled }
-      it { should be_running }
-    end
-
-    describe service('nfs') do
       it { should be_enabled }
       it { should be_running }
     end

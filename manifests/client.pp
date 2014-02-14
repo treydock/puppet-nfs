@@ -43,7 +43,8 @@ class nfs::client (
   $portmapper_port      = $nfs::params::portmapper_port,
   $lockd_tcpport        = $nfs::params::lockd_tcpport,
   $lockd_udpport        = $nfs::params::lockd_udpport,
-  $nfs_mounts           = {}
+  $nfs_mounts           = {},
+  $nfsmount_configs     = {}
 ) inherits nfs::params {
 
   require 'nfs'
@@ -52,9 +53,16 @@ class nfs::client (
 
   validate_bool($manage_firewall)
   validate_hash($nfs_mounts)
+  validate_hash($nfsmount_configs)
+
+  Package['nfs'] -> Nfsmount_config<| |>
 
   if !empty($nfs_mounts) {
     create_resources('nfs::mount', $nfs_mounts)
+  }
+
+  if $nfsmount_configs and !empty($nfsmount_configs) {
+    create_resources(nfsmount_config, $nfsmount_configs)
   }
 
   # This gives the option to not manage the service 'ensure' state.

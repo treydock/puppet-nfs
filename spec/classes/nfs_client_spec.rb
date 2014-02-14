@@ -7,9 +7,9 @@ describe 'nfs::client' do
 
   it { should create_class('nfs::client') }
   it { should contain_class('nfs::params') }
-  it { should include_class('nfs') }
-  it { should include_class('nfs::rpcbind') }
-  it { should include_class('nfs::netfs') }
+  it { should contain_class('nfs') }
+  it { should contain_class('nfs::rpcbind') }
+  it { should contain_class('nfs::netfs') }
 
   it_behaves_like "nfs::client firewall" do
     let(:default_params) {{}}
@@ -41,6 +41,26 @@ describe 'nfs::client' do
       'hasstatus'   => 'true',
       'hasrestart'  => 'true',
     })
+  end
+
+  it { should have_nfsmount_config_resource_count(0) }
+
+  context "when nfsmount_configs is a Hash" do
+    let :params do
+      {
+        :nfsmount_configs => {'NFSMount_Global_Options/Nfsvers' => {'value' => 3}}
+      }
+    end
+
+    it { should have_nfsmount_config_resource_count(1) }
+
+    it { should contain_nfsmount_config('NFSMount_Global_Options/Nfsvers').with_value('3') }
+    it { should contain_package('nfs').that_comes_before('Nfsmount_config[NFSMount_Global_Options/Nfsvers]') }
+  end
+
+  context 'when nfsmount_configs is "foo"' do
+    let(:params) {{ :nfsmount_configs => "foo" }}
+    it { expect { should create_class('nfs::client') }.to raise_error(Puppet::Error, /is not a Hash/) }
   end
 
   # Test service ensure and enable 'magic' values
