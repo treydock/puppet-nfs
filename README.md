@@ -60,8 +60,8 @@ Install gem dependencies
 
 Run unit tests
 
-    bundle exec rake ci
+    bundle exec rake test
 
-If you have Vagrant >= 1.2.0 installed you can run system tests
+You can run acceptance tests
 
-    bundle exec rake spec:system
+    bundle exec rake acceptance
