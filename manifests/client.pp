@@ -26,6 +26,15 @@ class nfs::client (
   $portmapper_port      = $nfs::params::portmapper_port,
   $lockd_tcpport        = $nfs::params::lockd_tcpport,
   $lockd_udpport        = $nfs::params::lockd_udpport,
+  $global_defaultvers   = 'UNSET',
+  $global_nfsvers       = 'UNSET',
+  $global_defaultproto  = 'UNSET',
+  $global_proto         = 'UNSET',
+  $global_soft          = 'UNSET',
+  $global_lock          = 'UNSET',
+  $global_rsize         = 'UNSET',
+  $global_wsize         = 'UNSET',
+  $global_sharecache    = 'UNSET',
   $nfs_mounts           = {},
   $nfsmount_configs     = {}
 ) inherits nfs::params {
@@ -112,4 +121,13 @@ class nfs::client (
 
   Service['rpcbind'] -> Service['nfslock']
 
+  if $global_defaultvers != 'UNSET'   { nfsmount_config { 'NFSMount_Global_Options/Defaultvers':  value => $global_defaultvers } }
+  if $global_nfsvers != 'UNSET'       { nfsmount_config { 'NFSMount_Global_Options/Nfsvers':      value => $global_nfsvers } }
+  if $global_defaultproto != 'UNSET'  { nfsmount_config { 'NFSMount_Global_Options/Defaultproto': value => $global_defaultproto } }
+  if $global_proto != 'UNSET'         { nfsmount_config { 'NFSMount_Global_Options/Proto':        value => $global_proto } }
+  if $global_soft != 'UNSET'          { nfsmount_config { 'NFSMount_Global_Options/Soft':         value => $global_soft } }
+  if $global_lock != 'UNSET'          { nfsmount_config { 'NFSMount_Global_Options/Lock':         value => $global_lock } }
+  if $global_rsize != 'UNSET'         { nfsmount_config { 'NFSMount_Global_Options/Rsize':        value => $global_rsize } }
+  if $global_wsize != 'UNSET'         { nfsmount_config { 'NFSMount_Global_Options/Wsize':        value => $global_wsize } }
+  if $global_sharecache != 'UNSET'    { nfsmount_config { 'NFSMount_Global_Options/Sharecache':   value => $global_sharecache } }
 }

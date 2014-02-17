@@ -45,17 +45,37 @@ describe 'nfs::client' do
 
   it { should have_nfsmount_config_resource_count(0) }
 
+  [
+    'defaultvers',
+    'nfsvers',
+    'defaultproto',
+    'proto',
+    'soft',
+    'lock',
+    'rsize',
+    'wsize',
+    'sharecache',
+  ].each do |p|
+    context "when global_#{p} => 'FOO'" do
+      let(:params) {{ :"global_#{p}" => 'FOO' }}
+      let(:setting) { p.capitalize }
+      it { should have_nfsmount_config_resource_count(1) }
+      it { should contain_nfsmount_config("NFSMount_Global_Options/#{setting}").with_value('FOO') }
+      it { should contain_package('nfs').that_comes_before("Nfsmount_config[NFSMount_Global_Options/#{setting}]") }
+    end
+  end
+
   context "when nfsmount_configs is a Hash" do
     let :params do
       {
-        :nfsmount_configs => {'NFSMount_Global_Options/Nfsvers' => {'value' => 3}}
+        :nfsmount_configs => {'NFSMount_Global_Options/Retrans' => {'value' => 2}}
       }
     end
 
     it { should have_nfsmount_config_resource_count(1) }
 
-    it { should contain_nfsmount_config('NFSMount_Global_Options/Nfsvers').with_value('3') }
-    it { should contain_package('nfs').that_comes_before('Nfsmount_config[NFSMount_Global_Options/Nfsvers]') }
+    it { should contain_nfsmount_config('NFSMount_Global_Options/Retrans').with_value('2') }
+    it { should contain_package('nfs').that_comes_before('Nfsmount_config[NFSMount_Global_Options/Retrans]') }
   end
 
   context 'when nfsmount_configs is "foo"' do
