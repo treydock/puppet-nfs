@@ -1,5 +1,5 @@
 name    'treydock-nfs'
-version '0.3.0'
+version '0.3.1'
 source 'git://github.com/treydock/puppet-nfs.git'
 author 'treydock'
 license 'Apache License, Version 2.0'
