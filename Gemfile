@@ -7,12 +7,13 @@ group :development, :test do
   gem 'puppet-lint',            :require => false
   gem 'puppet-syntax',          :require => false
   gem 'travis-lint',            :require => false
+  gem 'simplecov',              :require => false
+  gem 'coveralls',              :require => false
 end
 
 group :development do
-  gem 'beaker',                 :require => false
   gem 'beaker-rspec',           :require => false
-  gem "puppet-blacksmith",      :require => false
+  gem 'vagrant-wrapper',        :require => false
 end
 
 if puppetversion = ENV['PUPPET_GEM_VERSION']

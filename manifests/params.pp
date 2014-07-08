@@ -43,13 +43,12 @@ class nfs::params {
       $client_service_name          = 'nfslock'
       $client_service_hasstatus     = true
       $client_service_hasrestart    = true
-      $rpcbind_package_name         = $::operatingsystemrelease ? {
-        /^6/  => 'rpcbind',
-        /^5/  => 'portmap',
-      }
-      $rpcbind_service_name         = $::operatingsystemrelease ? {
-        /^6/  => 'rpcbind',
-        /^5/  => 'portmap',
+      if $::operatingsystemmajrelease < 6 {
+        $rpcbind_package_name       = 'portmap'
+        $rpcbind_service_name       = 'portmap'
+      } else {
+        $rpcbind_package_name       = 'rpcbind'
+        $rpcbind_service_name       = 'rpcbind'
       }
       $rpcbind_service_hasstatus    = true
       $rpcbind_service_hasrestart   = true
