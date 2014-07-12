@@ -16,11 +16,10 @@ class nfs::params {
 
   $server_service_ensure        = 'running'
   $server_service_enable        = true
-  $server_service_autorestart   = true
-  $client_service_ensure        = 'running'
-  $client_service_enable        = true
-  $rpcbind_service_ensure       = 'running'
-  $rpcbind_service_enable       = true
+  $lock_service_ensure          = 'running'
+  $lock_service_enable          = true
+  $rpc_service_ensure           = 'running'
+  $rpc_service_enable           = true
   $netfs_service_ensure         = 'running'
   $netfs_service_enable         = true
 
@@ -36,22 +35,28 @@ class nfs::params {
   case $::osfamily {
     'RedHat': {
       $package_name                 = 'nfs-utils'
-      $config_path                  = '/etc/sysconfig/nfs'
+      $service_config_path          = '/etc/sysconfig/nfs'
       $server_service_name          = 'nfs'
       $server_service_hasstatus     = true
       $server_service_hasrestart    = true
-      $client_service_name          = 'nfslock'
-      $client_service_hasstatus     = true
-      $client_service_hasrestart    = true
-      if $::operatingsystemmajrelease < 6 {
-        $rpcbind_package_name       = 'portmap'
-        $rpcbind_service_name       = 'portmap'
+      $lock_service_name            = 'nfslock'
+      $lock_service_hasstatus       = true
+      $lock_service_hasrestart      = true
+      if versioncmp($::operatingsystemrelease, '7.0') >= 0 {
+        $has_netfs                  = false
+        $rpc_package_name           = 'rpcbind'
+        $rpc_service_name           = 'rpcbind'
+      } elsif versioncmp($::operatingsystemrelease, '6.0') < 0 {
+        $has_netfs                  = true
+        $rpc_package_name           = 'portmap'
+        $rpc_service_name           = 'portmap'
       } else {
-        $rpcbind_package_name       = 'rpcbind'
-        $rpcbind_service_name       = 'rpcbind'
+        $has_netfs                  = true
+        $rpc_package_name           = 'rpcbind'
+        $rpc_service_name           = 'rpcbind'
       }
-      $rpcbind_service_hasstatus    = true
-      $rpcbind_service_hasrestart   = true
+      $rpc_service_hasstatus        = true
+      $rpc_service_hasrestart       = true
       $netfs_service_name           = 'netfs'
       $netfs_service_hasstatus      = true
       $netfs_service_hasrestart     = true

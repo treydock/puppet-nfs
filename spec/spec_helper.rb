@@ -2,7 +2,7 @@ require 'puppetlabs_spec_helper/module_spec_helper'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-Dir["#{dir}/shared_*/*.rb"].sort.each {|f| require f}
+Dir["#{dir}/support/*.rb"].sort.each {|f| require f}
 
 begin
   require 'simplecov'
@@ -16,3 +16,17 @@ rescue Exception => e
 end
 
 at_exit { RSpec::Puppet::Coverage.report! }
+
+shared_context :defaults do
+  let :default_facts do
+    {
+      :domain                     => 'example.com',
+      :kernel                     => 'Linux',
+      :osfamily                   => 'RedHat',
+      :operatingsystem            => 'CentOS',
+      :operatingsystemrelease     => '6.4',
+      :operatingsystemmajrelease  => '6',
+      :architecture               => 'x86_64',
+    }
+  end
+end

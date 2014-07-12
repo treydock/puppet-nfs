@@ -1,9 +1,12 @@
-require 'beaker-rspec/spec_helper'
-require 'beaker-rspec/helpers/serverspec'
+require 'beaker-rspec'
 
 hosts.each do |host|
-  # Install Puppet
-  install_puppet
+  #install_puppet
+  if host['platform'] =~ /el-(5|6)/
+    relver = $1
+    on host, "rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-#{relver}.noarch.rpm", { :acceptable_exit_codes => [0,1] }
+    on host, 'yum install -y puppet', { :acceptable_exit_codes => [0,1] }
+  end
 end
 
 RSpec.configure do |c|
@@ -20,7 +23,7 @@ RSpec.configure do |c|
 
     hosts.each do |host|
       if fact('osfamily') == 'RedHat'
-        on host, puppet('module', 'install', 'stahnma/epel'), { :acceptable_exit_codes => [0,1] }
+        on host, puppet('module', 'install', 'stahnma-epel'), { :acceptable_exit_codes => [0,1] }
       end
       on host, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'puppetlabs-firewall'), { :acceptable_exit_codes => [0,1] }

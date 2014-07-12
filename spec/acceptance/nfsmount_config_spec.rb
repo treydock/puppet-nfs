@@ -8,7 +8,7 @@ describe 'nfsmount_config type' do
       EOS
   
       apply_manifest(pp, :catch_failures => true)
-      expect(apply_manifest(pp, :catch_failures => true).exit_code).to be_zero
+      apply_manifest(pp, :catch_changes => true)
     end
 
     describe file('/etc/nfsmount.conf') do
