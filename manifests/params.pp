@@ -35,7 +35,10 @@ class nfs::params {
   case $::osfamily {
     'RedHat': {
       $package_name                 = 'nfs-utils'
+      $nfs4_acl_tools_package_name  = 'nfs4-acl-tools'
       $service_config_path          = '/etc/sysconfig/nfs'
+      $nfsmount_config_path         = '/etc/nfsmount.conf'
+      $idmapd_config_path           = '/etc/idmapd.conf'
       $server_service_name          = 'nfs'
       $server_service_hasstatus     = true
       $server_service_hasrestart    = true

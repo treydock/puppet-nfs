@@ -46,4 +46,16 @@ describe 'Puppet::Type.type(:nfsmount_config)' do
       @nfsmount_config[:ensure] = :latest
     }.to raise_error(Puppet::Error, /Invalid value/)
   end
+
+  describe 'autorequire File resources' do
+    it 'should autorequire /etc/nfsmount.conf' do
+      conf = Puppet::Type.type(:file).new(:name => '/etc/nfsmount.conf')
+      catalog = Puppet::Resource::Catalog.new
+      catalog.add_resource @nfsmount_config
+      catalog.add_resource conf
+      rel = @nfsmount_config.autorequire[0]
+      rel.source.ref.should == conf.ref
+      rel.target.ref.should == @nfsmount_config.ref
+    end
+  end
 end

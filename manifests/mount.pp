@@ -18,16 +18,17 @@
 #
 define nfs::mount (
   $device,
-  $ensure   = 'mounted',
-  $atboot   = true,
-  $path     = 'UNSET',
-  $options  = 'rw'
+  $ensure           = 'mounted',
+  $atboot           = true,
+  $path             = 'UNSET',
+  $options          = 'rw',
+  $manage_directory = true,
 ) {
 
   include nfs::params
 
   $path_real = $path ? {
-    'UNSET' => $name,
+    'UNSET' => $title,
     default => $path,
   }
 
@@ -36,10 +37,15 @@ define nfs::mount (
     default => $options,
   }
 
-  $path_params = { 'ensure' => 'directory' }
-  ensure_resource( 'file', $path_real, $path_params )
+  if $manage_directory {
+    if ! defined(File[$path_real]) {
+      file { $path_real:
+        ensure => 'directory',
+      }
+    }
+  }
 
-  mount { $name:
+  mount { $title:
     ensure  => $ensure,
     name    => $path_real,
     atboot  => $atboot,

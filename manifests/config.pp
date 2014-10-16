@@ -10,11 +10,27 @@ class nfs::config {
   }
 
   file { '/etc/sysconfig/nfs':
-    ensure  => 'file',
-    path    => $::nfs::service_config_path,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+    ensure => 'file',
+    path   => $::nfs::service_config_path,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+  }
+
+  file { '/etc/nfsmount.conf':
+    ensure => 'file',
+    path   => $::nfs::nfsmount_config_path,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+  }
+
+  file { '/etc/idmapd.conf':
+    ensure => 'file',
+    path   => $::nfs::idmapd_config_path,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
   }
 
   Shellvar {

@@ -26,4 +26,10 @@ Puppet::Type.newtype(:nfsmount_config) do
       end
     end
   end
+
+  autorequire(:file) do
+    [
+      '/etc/nfsmount.conf',
+    ]
+  end
 end

@@ -46,4 +46,16 @@ describe 'Puppet::Type.type(:idmapd_config)' do
       @idmapd_config[:ensure] = :latest
     }.to raise_error(Puppet::Error, /Invalid value/)
   end
+
+  describe 'autorequire File resources' do
+    it 'should autorequire /etc/idmapd.conf' do
+      conf = Puppet::Type.type(:file).new(:name => '/etc/idmapd.conf')
+      catalog = Puppet::Resource::Catalog.new
+      catalog.add_resource @idmapd_config
+      catalog.add_resource conf
+      rel = @idmapd_config.autorequire[0]
+      rel.source.ref.should == conf.ref
+      rel.target.ref.should == @idmapd_config.ref
+    end
+  end
 end

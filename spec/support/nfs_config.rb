@@ -10,6 +10,26 @@ shared_examples 'nfs::config' do
   end
 
   it do
+    should contain_file('/etc/nfsmount.conf').with({
+      :ensure => 'file',
+      :path   => '/etc/nfsmount.conf',
+      :owner  => 'root',
+      :group  => 'root',
+      :mode   => '0644',
+    })
+  end
+
+  it do
+    should contain_file('/etc/idmapd.conf').with({
+      :ensure => 'file',
+      :path   => '/etc/idmapd.conf',
+      :owner  => 'root',
+      :group  => 'root',
+      :mode   => '0644',
+    })
+  end
+
+  it do
     should contain_shellvar('LOCKD_TCPPORT').with({
       :ensure => 'present',
       :target => '/etc/sysconfig/nfs',
@@ -50,7 +70,6 @@ shared_examples 'nfs::config' do
       let(:setting) { p.capitalize }
       it { should have_nfsmount_config_resource_count(1) }
       it { should contain_nfsmount_config("NFSMount_Global_Options/#{setting}").with_value('FOO') }
-      it { should contain_package('nfs').that_comes_before("Nfsmount_config[NFSMount_Global_Options/#{setting}]") }
     end
   end
 

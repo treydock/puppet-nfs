@@ -26,4 +26,10 @@ Puppet::Type.newtype(:idmapd_config) do
       end
     end
   end
+
+  autorequire(:file) do
+    [
+      '/etc/idmapd.conf',
+    ]
+  end
 end

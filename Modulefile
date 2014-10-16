@@ -10,5 +10,5 @@ project_page 'http://github.com/treydock/puppet-nfs'
 ## Add dependencies, if any:
 dependency 'puppetlabs/stdlib', '>=3.2.0 <5.0.0'
 dependency 'puppetlabs/firewall', '>=0.4.0'
-dependency 'domcleal/augeasproviders', '>= 1.0.2'
+dependency 'herculesteam/augeasproviders_shellvar', '>= 2.0.0'
 dependency 'puppetlabs/inifile', '>=1.0.1 <2.0.0'

@@ -9,16 +9,17 @@ $LOAD_PATH.push(
     '..',
     '..',
     '..',
+    '..',
     'fixtures',
     'modules',
     'inifile',
     'lib')
 )
 require 'spec_helper'
-provider_class = Puppet::Type.type(:nfsmount_config).provider(:ini_setting)
+provider_class = Puppet::Type.type(:idmapd_config).provider(:ini_setting)
 describe provider_class do
   before :each do
-    resource = Puppet::Type::Nfsmount_config.new(
+    resource = Puppet::Type::Idmapd_config.new(
       {:name => 'vars/foo', :value => 'bar'}
     )
     @provider = provider_class.new(resource)

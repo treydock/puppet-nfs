@@ -1,0 +1,14 @@
+# File managed by Puppet, do not edit!
+<%
+exports = scope.lookupvar('nfs::exports')
+if ! exports.empty?
+  longest_export    = exports.keys.group_by(&:size).max.last.first 
+  export_str_length = longest_export.size
+end
+-%>
+
+<% exports.keys.sort.each do |export| -%>
+<% exportfs = export.ljust(export_str_length) -%>
+<% hosts = exports[export].sort_by { |host| host['order'] } -%>
+<%= exportfs %>  <%= hosts.map { |h| "#{h['host']}(#{h['options']})" }.join(' ') %>
+<% end -%>

@@ -16,6 +16,7 @@ class nfs (
   $portmapper_port            = $nfs::params::portmapper_port,
   $lockd_tcpport              = $nfs::params::lockd_tcpport,
   $lockd_udpport              = $nfs::params::lockd_udpport,
+  $nfsmount_config_path       = $nfs::params::nfsmount_config_path,
   $global_defaultvers         = 'UNSET',
   $global_nfsvers             = 'UNSET',
   $global_defaultproto        = 'UNSET',
@@ -26,6 +27,7 @@ class nfs (
   $global_wsize               = 'UNSET',
   $global_sharecache          = 'UNSET',
   $manage_idmapd              = true,
+  $idmapd_config_path         = $nfs::params::idmapd_config_path,
   $idmapd_domain              = $::domain,
   $server_service_autorestart = true,
   $rpc_nfsd_count             = $nfs::params::rpc_nfsd_count,
@@ -36,24 +38,37 @@ class nfs (
   $rdma_port                  = $nfs::params::rdma_port,
   $nfs_mounts                 = {},
   $nfsmount_configs           = {},
+  $exports                    = {},
 ) inherits nfs::params {
 
-  validate_bool($server)
-  validate_bool($manage_firewall)
-  validate_bool($manage_idmapd)
-  validate_bool($server_service_autorestart)
-  validate_bool($with_rdma)
-  validate_hash($nfs_mounts)
-  validate_hash($nfsmount_configs)
+  validate_bool(
+    $server,
+    $manage_firewall,
+    $manage_idmapd,
+    $server_service_autorestart,
+    $with_rdma
+  )
 
-  Package['nfs'] -> Nfsmount_config<| |>
+  validate_hash(
+    $nfs_mounts,
+    $nfsmount_configs,
+    $exports
+  )
+
+  include nfs::install
+  include nfs::config
+  include nfs::service
+  include nfs::firewall
+  include nfs::exports
+  include nfs::resources
 
   anchor { 'nfs::start': }->
-  class { 'nfs::install': }->
-  class { 'nfs::config': }->
-  class { 'nfs::service': }->
-  class { 'nfs::firewall': }->
-  class { 'nfs::resources': }->
+  Class['nfs::install']->
+  Class['nfs::config']->
+  Class['nfs::service']->
+  Class['nfs::firewall']->
+  Class['nfs::exports']->
+  Class['nfs::resources']->
   anchor { 'nfs::end': }
 
 }

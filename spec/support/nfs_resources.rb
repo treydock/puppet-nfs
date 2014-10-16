@@ -9,7 +9,6 @@ shared_examples 'nfs::resources' do
     it { should have_nfsmount_config_resource_count(1) }
 
     it { should contain_nfsmount_config('NFSMount_Global_Options/Retrans').with_value('2') }
-    it { should contain_package('nfs').that_comes_before('Nfsmount_config[NFSMount_Global_Options/Retrans]') }
   end
 
   context 'with nfs_mounts defined' do
