@@ -1,21 +1,8 @@
-# == Class: nfs::params
-#
-# The nfs configuration settings.
-#
-# === Authors
-#
-# Trey Dockendorf <treydock@gmail.com>
-#
-# === Copyright
-#
-# Copyright 2013 Trey Dockendorf
-#
+# Private class
 class nfs::params {
 
   $rpc_nfsd_count               = '8'
 
-  $server_service_ensure        = 'running'
-  $server_service_enable        = true
   $lock_service_ensure          = 'running'
   $lock_service_enable          = true
   $rpc_service_ensure           = 'running'

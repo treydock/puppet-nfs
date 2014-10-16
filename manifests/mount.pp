@@ -25,8 +25,6 @@ define nfs::mount (
   $manage_directory = true,
 ) {
 
-  include nfs::params
-
   $path_real = $path ? {
     'UNSET' => $title,
     default => $path,

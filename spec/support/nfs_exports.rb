@@ -64,6 +64,36 @@ shared_examples 'nfs::exports' do
         ])
       end
     end
+
+    context 'with exports defined without order' do
+      let :params do
+        {
+          :server  => true,
+          :exports => {
+            '/mnt/ab' => [
+              {
+                'host'    => '192.168.1.2',
+                'options' => 'ro,sync',
+              },
+              {
+                'host'    => '192.168.1.1',
+                'options' => 'rw,sync,no_root_squash',
+              },
+              {
+                'host'    => '192.168.1.0/24',
+                'options' => 'rw,async,no_root_squash',
+              }
+            ]
+          }
+        }
+      end
+
+      it do
+        verify_contents(catalogue, '/etc/exports', [
+          '/mnt/ab  192.168.1.0/24(rw,async,no_root_squash) 192.168.1.1(rw,sync,no_root_squash) 192.168.1.2(ro,sync)',
+        ])
+      end
+    end
   end
 
 end
