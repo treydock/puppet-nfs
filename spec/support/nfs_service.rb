@@ -39,6 +39,7 @@ shared_examples 'nfs::service' do
       :enable      => 'true',
       :hasstatus   => 'true',
       :hasrestart  => 'true',
+      :name        => 'rpcidmapd',
     })
   end
 
