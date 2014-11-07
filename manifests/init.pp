@@ -28,6 +28,7 @@ class nfs (
   $global_sharecache          = 'UNSET',
   $has_netfs                  = $nfs::params::has_netfs,
   $manage_idmapd              = true,
+  $enable_idmapd              = true,
   $idmapd_config_path         = $nfs::params::idmapd_config_path,
   $idmapd_domain              = $::domain,
   $server_service_ensure      = undef,
@@ -48,6 +49,7 @@ class nfs (
     $server,
     $manage_firewall,
     $manage_idmapd,
+    $enable_idmapd,
     $server_service_autorestart,
     $with_rdma
   )
@@ -57,6 +59,16 @@ class nfs (
     $nfsmount_configs,
     $exports
   )
+
+  if $enable_idmapd {
+    $idmapd_service_ensure = 'running'
+    $idmapd_service_enable = true
+    $idmapd_config_notify  = Service['rpcidmapd']
+  } else {
+    $idmapd_service_ensure = 'stopped'
+    $idmapd_service_enable = false
+    $idmapd_config_notify  = undef
+  }
 
   include nfs::install
   include nfs::config

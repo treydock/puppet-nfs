@@ -56,8 +56,8 @@ class nfs::service {
 
   if $nfs::manage_idmapd {
     service { 'rpcidmapd':
-      ensure     => running,
-      enable     => true,
+      ensure     => $nfs::idmapd_service_ensure,
+      enable     => $nfs::idmapd_service_enable,
       name       => $nfs::idmap_service_name,
       hasstatus  => true,
       hasrestart => true,

@@ -43,6 +43,17 @@ shared_examples 'nfs::service' do
     })
   end
 
+  context 'when enable_idmapd => false' do
+    let(:params) {{ :enable_idmapd => false }}
+
+    it 'rpcidmapd should be stopped and disabled' do
+      should contain_service('rpcidmapd').with({
+        :ensure => 'stopped',
+        :enable => 'false',
+      })
+    end
+  end
+
   context 'when server => true' do
     let(:params) {{ :server => true }}
 

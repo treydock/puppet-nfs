@@ -29,6 +29,7 @@ describe 'nfs' do
     :server,
     :manage_firewall,
     :manage_idmapd,
+    :enable_idmapd,
     :server_service_autorestart,
     :with_rdma,
   ].each do |param|

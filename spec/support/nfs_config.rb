@@ -81,6 +81,14 @@ shared_examples 'nfs::config' do
     })
   end
 
+  context 'when enable_idmapd => false' do
+    let(:params) {{ :enable_idmapd => false }}
+
+    it 'idmapd_config should not notify' do
+      should contain_idmapd_config('General/Domain').without_notify
+    end
+  end
+
   context 'when server => true' do
     let(:params) {{ :server => true }}
 

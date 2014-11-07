@@ -64,7 +64,7 @@ class nfs::config {
 
   if $nfs::manage_idmapd {
     Idmapd_config {
-      notify  => Service['rpcidmapd']
+      notify  => $nfs::idmapd_config_notify
     }
 
     idmapd_config { 'General/Domain': value => $nfs::idmapd_domain }
