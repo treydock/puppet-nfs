@@ -1,9 +1,13 @@
 require 'spec_helper'
 
 describe 'nfs::mount' do
-  include_context :defaults
-
-  let(:facts) { default_facts }
+  let :facts do
+    {
+      :domain                     => 'example.com',
+      :osfamily                   => 'RedHat',
+      :operatingsystemrelease     => '6.4',
+    }
+  end
 
   let(:title) { "/mnt/foo" }
 

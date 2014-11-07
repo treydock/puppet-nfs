@@ -13,6 +13,5 @@ fixtures:
     inifile:
       repo: git://github.com/puppetlabs/puppetlabs-inifile
       ref: 1.1.3
-    infiniband: git://github.com/treydock/puppet-infiniband.git
   symlinks:
     nfs: "#{source_dir}"
