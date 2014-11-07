@@ -39,7 +39,7 @@ class nfs::config {
     notify  => $shellvar_notify,
   }
 
-  shellvar { 'LOCKD_TCPPORT': value   => $nfs::lockd_tcpport }
+  shellvar { 'LOCKD_TCPPORT': value => $nfs::lockd_tcpport }
   shellvar { 'LOCKD_UDPPORT': value => $nfs::lockd_udpport }
 
   if $nfs::server {

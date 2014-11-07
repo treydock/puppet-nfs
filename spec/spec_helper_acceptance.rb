@@ -1,5 +1,8 @@
 require 'beaker-rspec'
 
+dir = File.expand_path(File.dirname(__FILE__))
+Dir["#{dir}/acceptance/support/*.rb"].sort.each {|f| require f}
+
 hosts.each do |host|
   #install_puppet
   if host['platform'] =~ /el-(5|6)/
@@ -22,13 +25,10 @@ RSpec.configure do |c|
     puppet_module_install(:source => proj_root, :module_name => 'nfs')
 
     hosts.each do |host|
-      if fact('osfamily') == 'RedHat'
-        on host, puppet('module', 'install', 'stahnma-epel'), { :acceptable_exit_codes => [0,1] }
-      end
       on host, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'puppetlabs-firewall'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'puppetlabs-inifile'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module', 'install', 'domcleal-augeasproviders'), { :acceptable_exit_codes => [0,1] }
+      on host, puppet('module', 'install', 'herculesteam-augeasproviders_shellvar', '--version', '"<= 2.0.1"'), { :acceptable_exit_codes => [0,1] }
     end
   end
 end
