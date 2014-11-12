@@ -28,7 +28,7 @@ RSpec.configure do |c|
       on host, puppet('module', 'install', 'puppetlabs-stdlib'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'puppetlabs-firewall'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module', 'install', 'puppetlabs-inifile'), { :acceptable_exit_codes => [0,1] }
-      on host, puppet('module', 'install', 'herculesteam-augeasproviders_shellvar', '--version', '"<= 2.0.1"'), { :acceptable_exit_codes => [0,1] }
+      on host, puppet('module', 'install', 'herculesteam-augeasproviders_shellvar'), { :acceptable_exit_codes => [0,1] }
     end
   end
 end
