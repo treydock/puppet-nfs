@@ -1,4 +1,11 @@
 shared_examples_for 'nfs::install' do |node|
+  case fact('operatingsystemmajrelease')
+  when '5'
+    rpc_package = 'portmap'
+  else
+    rpc_package = 'rpcbind'
+  end
+
   describe package('nfs-utils') do
     it { should be_installed }
   end
@@ -7,7 +14,7 @@ shared_examples_for 'nfs::install' do |node|
     it { should be_installed }
   end
 
-  describe package('rpcbind') do
+  describe package(rpc_package) do
     it { should be_installed }
   end
 end

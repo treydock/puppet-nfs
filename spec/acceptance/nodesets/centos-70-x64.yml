@@ -1,0 +1,10 @@
+HOSTS:
+  centos-7-x64:
+    roles:
+      - master
+    platform: el-7-x86_64
+    box: centos-70-x64-vbox4312-nocm
+    box_url: http://yum.tamu.edu/vagrant/centos-70-x64-vbox4312-nocm.box
+    hypervisor: vagrant
+CONFIG:
+  type: foss
