@@ -1,19 +1,36 @@
-shared_examples 'nfs::service' do
-  it do
-    should contain_service('netfs').with({
-      :ensure     => 'running',
-      :enable     => 'true',
-      :name       => 'netfs',
-      :hasstatus  => 'true',
-      :hasrestart => 'true',
-    })
+shared_examples 'nfs::service' do |facts|
+  case facts[:operatingsystemmajrelease]
+  when '7'
+    lock_service  = 'nfs-lock'
+    rpc_service   = 'rpcbind'
+    idmap_service = 'nfs-idmap'
+  when '6'
+    lock_service  = 'nfslock'
+    rpc_service   = 'rpcbind'
+    idmap_service = 'rpcidmapd'
+  when '5'
+    lock_service  = 'nfslock'
+    rpc_service   = 'portmap'
+    idmap_service = 'rpcidmapd'
+  end
+
+  if facts[:operatingsystemmajrelease] < '7'
+    it do
+      should contain_service('netfs').with({
+        :ensure     => 'running',
+        :enable     => 'true',
+        :name       => 'netfs',
+        :hasstatus  => 'true',
+        :hasrestart => 'true',
+      })
+    end
   end
 
   it do
     should contain_service('rpcbind').with({
       :ensure     => 'running',
       :enable     => 'true',
-      :name       => 'rpcbind',
+      :name       => rpc_service,
       :hasstatus  => 'true',
       :hasrestart => 'true',
     })
@@ -25,7 +42,7 @@ shared_examples 'nfs::service' do
     should contain_service('nfslock').with({
       :ensure     => 'running',
       :enable     => 'true',
-      :name       => 'nfslock',
+      :name       => lock_service,
       :hasstatus  => 'true',
       :hasrestart => 'true',
     })
@@ -39,7 +56,7 @@ shared_examples 'nfs::service' do
       :enable      => 'true',
       :hasstatus   => 'true',
       :hasrestart  => 'true',
-      :name        => 'rpcidmapd',
+      :name        => idmap_service,
     })
   end
 

@@ -1,4 +1,13 @@
-shared_examples 'nfs::install' do
+shared_examples 'nfs::install' do |facts|
+  case facts[:operatingsystemmajrelease]
+  when '7'
+    rpc_package = 'rpcbind'
+  when '6'
+    rpc_package = 'rpcbind'
+  when '5'
+    rpc_package = 'portmap'
+  end
+
   it do
     should contain_package('nfs').with({
       :ensure => 'present',
@@ -16,7 +25,7 @@ shared_examples 'nfs::install' do
   it do
     should contain_package('rpcbind').with({
       :ensure => 'present',
-      :name   => 'rpcbind',
+      :name   => rpc_package,
     })
   end
 end

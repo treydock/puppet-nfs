@@ -19,7 +19,7 @@ def rdma_firewall_resources
   ]
 end
 
-shared_examples "nfs::firewall" do
+shared_examples "nfs::firewall" do |facts|
   it { should have_firewall_resource_count(4) }
 
   client_default_firewall_resources.each do |firewall|

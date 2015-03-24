@@ -1,4 +1,4 @@
-shared_examples 'nfs::exports' do
+shared_examples 'nfs::exports' do |facts|
   it { should_not contain_file('/etc/exports') }
   it { should_not contain_exec('exportfs') }
 

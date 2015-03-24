@@ -1,4 +1,4 @@
-shared_examples 'nfs::resources' do
+shared_examples 'nfs::resources' do |facts|
   context "when nfsmount_configs is a Hash" do
     let :params do
       {

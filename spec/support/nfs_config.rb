@@ -1,4 +1,4 @@
-shared_examples 'nfs::config' do
+shared_examples 'nfs::config' do |facts|
   it do
     should contain_file('/etc/sysconfig/nfs').with({
       :ensure => 'file',
