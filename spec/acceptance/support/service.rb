@@ -1,19 +1,19 @@
-case fact('operatingsystemmajrelease')
-when '5'
-  rpc_service   = 'portmap'
-  lock_service  = 'nfslock'
-  idmap_service = 'rpcidmapd'
-when '6'
-  rpc_service   = 'rpcbind'
-  lock_service  = 'nfslock'
-  idmap_service = 'rpcidmapd'
-when '7'
-  rpc_service   = 'rpcbind'
-  lock_service  = 'nfs-lock'
-  idmap_service = 'nfs-idmap'
-end
-
 shared_examples_for 'nfs::service-base' do |node|
+  case fact('operatingsystemmajrelease')
+  when '5'
+    rpc_service   = 'portmap'
+    lock_service  = 'nfslock'
+    idmap_service = 'rpcidmapd'
+  when '6'
+    rpc_service   = 'rpcbind'
+    lock_service  = 'nfslock'
+    idmap_service = 'rpcidmapd'
+  when '7'
+    rpc_service   = 'rpcbind'
+    lock_service  = 'nfs-lock'
+    idmap_service = 'nfs-idmap'
+  end
+
   if fact('operatingsystemmajrelease') < '7'
     describe service('netfs') do
       it { should be_enabled }
@@ -38,7 +38,7 @@ shared_examples_for 'nfs::service-base' do |node|
 end
 
 shared_examples_for 'nfs::service-client' do |node|
-  it_behaves_like 'nfs::config-base', node
+  it_behaves_like 'nfs::service-base', node
 
   describe service('nfs') do
     it { should_not be_enabled }
@@ -47,7 +47,7 @@ shared_examples_for 'nfs::service-client' do |node|
 end
 
 shared_examples_for 'nfs::service-server' do |node|
-  it_behaves_like 'nfs::config-base', node
+  it_behaves_like 'nfs::service-base', node
 
   describe service('nfs') do
     it { should be_enabled }
