@@ -1,17 +1,20 @@
 shared_examples 'nfs::service' do |facts|
   case facts[:operatingsystemmajrelease]
   when '7'
-    lock_service  = 'nfs-lock'
-    rpc_service   = 'rpcbind'
-    idmap_service = 'nfs-idmap'
+    lock_service    = 'nfs-lock'
+    rpc_service     = 'rpcbind'
+    idmap_service   = 'nfs-idmap'
+    server_service  = 'nfs-server'
   when '6'
-    lock_service  = 'nfslock'
-    rpc_service   = 'rpcbind'
-    idmap_service = 'rpcidmapd'
+    lock_service    = 'nfslock'
+    rpc_service     = 'rpcbind'
+    idmap_service   = 'rpcidmapd'
+    server_service  = 'nfs'
   when '5'
-    lock_service  = 'nfslock'
-    rpc_service   = 'portmap'
-    idmap_service = 'rpcidmapd'
+    lock_service    = 'nfslock'
+    rpc_service     = 'portmap'
+    idmap_service   = 'rpcidmapd'
+    server_service  = 'nfs'
   end
 
   if facts[:operatingsystemmajrelease] < '7'
@@ -78,7 +81,7 @@ shared_examples 'nfs::service' do |facts|
       should contain_service('nfs').with({
         :ensure     => 'running',
         :enable     => 'true',
-        :name       => 'nfs',
+        :name       => server_service,
         :hasstatus  => 'true',
         :hasrestart => 'true',
         :subscribe  => 'File[/etc/sysconfig/nfs]',
