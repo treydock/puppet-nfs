@@ -26,7 +26,6 @@ class nfs::params {
       $service_config_path          = '/etc/sysconfig/nfs'
       $nfsmount_config_path         = '/etc/nfsmount.conf'
       $idmapd_config_path           = '/etc/idmapd.conf'
-      $server_service_name          = 'nfs'
       $server_service_hasstatus     = true
       $server_service_hasrestart    = true
       $lock_service_hasstatus       = true
@@ -37,18 +36,21 @@ class nfs::params {
         $rpc_package_name           = 'rpcbind'
         $rpc_service_name           = 'rpcbind'
         $idmap_service_name         = 'nfs-idmap'
+        $server_service_name        = 'nfs-server'
       } elsif versioncmp($::operatingsystemrelease, '6.0') < 0 {
         $has_netfs                  = true
         $lock_service_name          = 'nfslock'
         $rpc_package_name           = 'portmap'
         $rpc_service_name           = 'portmap'
         $idmap_service_name         = 'rpcidmapd'
+        $server_service_name        = 'nfs'
       } else {
         $has_netfs                  = true
         $lock_service_name          = 'nfslock'
         $rpc_package_name           = 'rpcbind'
         $rpc_service_name           = 'rpcbind'
         $idmap_service_name         = 'rpcidmapd'
+        $server_service_name        = 'nfs'
       }
       $rpc_service_hasstatus        = true
       $rpc_service_hasrestart       = true
