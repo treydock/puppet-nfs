@@ -13,6 +13,8 @@
 class nfs (
   $server                     = false,
   $manage_firewall            = true,
+  $firewall_iniface           = undef,
+  $firewall_source            = undef,
   $portmapper_port            = $nfs::params::portmapper_port,
   $lockd_tcpport              = $nfs::params::lockd_tcpport,
   $lockd_udpport              = $nfs::params::lockd_udpport,
