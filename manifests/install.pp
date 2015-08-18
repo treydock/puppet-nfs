@@ -14,9 +14,11 @@ class nfs::install {
     name   => $nfs::params::nfs4_acl_tools_package_name
   }
 
-  package { 'rpcbind':
-    ensure => 'present',
-    name   => $nfs::params::rpc_package_name,
+  if $nfs::manage_rpcbind {
+    package { 'rpcbind':
+      ensure => 'present',
+      name   => $nfs::params::rpc_package_name,
+    }
   }
 
 }

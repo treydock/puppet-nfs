@@ -29,6 +29,7 @@ class nfs (
   $global_rsize               = 'UNSET',
   $global_wsize               = 'UNSET',
   $global_sharecache          = 'UNSET',
+  $manage_rpcbind             = true,
   $has_netfs                  = $nfs::params::has_netfs,
   $manage_idmapd              = true,
   $enable_idmapd              = true,
@@ -51,6 +52,7 @@ class nfs (
   validate_bool(
     $server,
     $manage_firewall,
+    $manage_rpcbind,
     $manage_idmapd,
     $enable_idmapd,
     $server_service_autorestart,

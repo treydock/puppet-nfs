@@ -74,6 +74,14 @@ shared_examples 'nfs::service' do |facts|
     end
   end
 
+  context 'when manage_rpcbind => false' do
+    let(:params) {{ :manage_rpcbind => false }}
+
+    it 'should not manage rpcbind service' do
+      should_not contain_service('rpcbind')
+    end
+  end
+
   context 'when server => true' do
     let(:params) {{ :server => true }}
 

@@ -28,4 +28,12 @@ shared_examples 'nfs::install' do |facts|
       :name   => rpc_package,
     })
   end
+
+  context 'when manage_rpcbind => false' do
+    let(:params) {{ :manage_rpcbind => false }}
+
+    it 'should not manage rpcbind package' do
+      should_not contain_package('rpcbind')
+    end
+  end
 end

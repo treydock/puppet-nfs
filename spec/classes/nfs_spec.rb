@@ -41,6 +41,7 @@ describe 'nfs' do
         [
           :server,
           :manage_firewall,
+          :manage_rpcbind,
           :manage_idmapd,
           :enable_idmapd,
           :server_service_autorestart,

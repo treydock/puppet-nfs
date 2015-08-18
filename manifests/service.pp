@@ -27,13 +27,17 @@ class nfs::service {
     }
   }
 
-  service { 'rpcbind':
-    ensure     => $nfs::rpc_service_ensure,
-    enable     => $nfs::rpc_service_enable,
-    name       => $nfs::rpc_service_name,
-    hasstatus  => $nfs::rpc_service_hasstatus,
-    hasrestart => $nfs::rpc_service_hasrestart,
-  }->
+  if $nfs::manage_rpcbind {
+    service { 'rpcbind':
+      ensure     => $nfs::rpc_service_ensure,
+      enable     => $nfs::rpc_service_enable,
+      name       => $nfs::rpc_service_name,
+      hasstatus  => $nfs::rpc_service_hasstatus,
+      hasrestart => $nfs::rpc_service_hasrestart,
+      before     => Service['nfslock'],
+    }
+  }
+
   service { 'nfslock':
     ensure     => $nfs::lock_service_ensure,
     enable     => $nfs::lock_service_enable,
