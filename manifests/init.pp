@@ -39,6 +39,7 @@ class nfs (
   $server_service_enable      = undef,
   $server_service_autorestart = true,
   $rpc_nfsd_count             = $nfs::params::rpc_nfsd_count,
+  $rpc_nfsd_args              = undef,
   $nfs_port                   = $nfs::params::nfs_port,
   $rquotad_port               = $nfs::params::rquotad_port,
   $mountd_port                = $nfs::params::mountd_port,

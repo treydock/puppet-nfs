@@ -50,6 +50,7 @@ shared_examples 'nfs::config' do |facts|
   it { should_not contain_shellvar('RQUOTAD_PORT') }
   it { should_not contain_shellvar('MOUNTD_PORT') }
   it { should_not contain_shellvar('RPCNFSDCOUNT') }
+  it { should_not contain_shellvar('RPCNFSDARGS') }
   it { should_not contain_shellvar('RDMA_PORT') }
 
   it { should have_nfsmount_config_resource_count(0) }
@@ -119,6 +120,7 @@ shared_examples 'nfs::config' do |facts|
       })
     end
 
+    it { should_not contain_shellvar('RPCNFSDARGS') }
     it { should_not contain_shellvar('RDMA_PORT') }
 
     context "with rpc_nfsd_count => 16" do
@@ -135,6 +137,19 @@ shared_examples 'nfs::config' do |facts|
           :target  => '/etc/sysconfig/nfs',
           :notify => ['Service[nfslock]','Service[nfs]'],
           :value   => '20049',
+        })
+      end
+    end
+
+    context 'with rpc_nfsd_args => "-N 4"' do
+      let(:params) {{ :server => true, :rpc_nfsd_args => '-N 4' }}
+
+      it do
+        should contain_shellvar('RPCNFSDARGS').with({
+          :ensure => 'present',
+          :target => '/etc/sysconfig/nfs',
+          :notify => ['Service[nfslock]', 'Service[nfs]'],
+          :value  => '-N 4',
         })
       end
     end

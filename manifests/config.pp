@@ -46,6 +46,9 @@ class nfs::config {
     shellvar { 'RQUOTAD_PORT': value => $nfs::rquotad_port }
     shellvar { 'MOUNTD_PORT': value => $nfs::mountd_port }
     shellvar { 'RPCNFSDCOUNT': value => $nfs::rpc_nfsd_count }
+    if $nfs::rpc_nfsd_args {
+      shellvar { 'RPCNFSDARGS': value => $nfs::rpc_nfsd_args }
+    }
 
     if $nfs::with_rdma {
       shellvar { 'RDMA_PORT': value => $nfs::rdma_port }
