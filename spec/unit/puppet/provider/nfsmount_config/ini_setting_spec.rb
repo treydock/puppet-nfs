@@ -26,7 +26,7 @@ describe provider_class do
   end
 
   it 'should set section and setting' do
-    @provider.section.should == 'vars'
+    @provider.section.should == ' vars '
     @provider.setting.should == 'foo'
   end
 end

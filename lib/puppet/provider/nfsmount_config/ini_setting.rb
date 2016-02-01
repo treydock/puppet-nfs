@@ -3,8 +3,9 @@ Puppet::Type.type(:nfsmount_config).provide(
   :parent => Puppet::Type.type(:ini_setting).provider(:ruby)
 ) do
 
+  # The sections in nfsmount.conf have spaces around them like [ NFSMount_Global_Options ]
   def section
-    resource[:name].split('/', 2).first
+    " " + resource[:name].split('/', 2).first + " "
   end
 
   def setting
