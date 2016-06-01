@@ -47,6 +47,15 @@ shared_examples 'nfs::config' do |facts|
     })
   end
 
+  it do
+    should contain_shellvar('STATD_PORT').with({
+      :ensure => 'present',
+      :target => '/etc/sysconfig/nfs',
+      :notify => 'Service[nfslock]',
+      :value  => '662',
+    })
+  end
+
   it { should_not contain_shellvar('RQUOTAD_PORT') }
   it { should_not contain_shellvar('MOUNTD_PORT') }
   it { should_not contain_shellvar('RPCNFSDCOUNT') }
@@ -88,6 +97,14 @@ shared_examples 'nfs::config' do |facts|
     it 'idmapd_config should not notify' do
       should contain_idmapd_config('General/Domain').without_notify
     end
+  end
+
+  context 'when configure_ports => false' do
+    let(:params) {{ :configure_ports => false }}
+
+    it { should_not contain_shellvar('LOCKD_TCPPORT') }
+    it { should_not contain_shellvar('LOCKD_UDPPORT') }
+    it { should_not contain_shellvar('STATD_PORT') }
   end
 
   context 'when server => true' do
@@ -152,6 +169,13 @@ shared_examples 'nfs::config' do |facts|
           :value  => '-N 4',
         })
       end
+    end
+
+    context 'when configure_ports => false' do
+      let(:params) {{ :server => true, :configure_ports => false }}
+
+      it { should_not contain_shellvar('RQUOTAD_PORT') }
+      it { should_not contain_shellvar('MOUNTD_PORT') }
     end
   end
 end

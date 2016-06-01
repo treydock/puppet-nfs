@@ -16,6 +16,7 @@ class nfs::params {
   $lockd_tcpport                = '32803'
   $lockd_udpport                = '32769'
   $mountd_port                  = '892'
+  $statd_port                   = '662'
 
   $rdma_port                    = '20049'
 

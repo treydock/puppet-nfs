@@ -1,7 +1,7 @@
 shared_examples 'nfs::service' do |facts|
   case facts[:operatingsystemmajrelease]
   when '7'
-    lock_service    = 'nfs-lock'
+    lock_service    = 'rpc-statd'
     rpc_service     = 'rpcbind'
     idmap_service   = 'nfs-idmap'
     server_service  = 'nfs-server'

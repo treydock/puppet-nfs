@@ -39,12 +39,13 @@ class nfs::config {
     notify  => $shellvar_notify,
   }
 
-  shellvar { 'LOCKD_TCPPORT': value => $nfs::lockd_tcpport }
-  shellvar { 'LOCKD_UDPPORT': value => $nfs::lockd_udpport }
+  if $nfs::configure_ports { shellvar { 'LOCKD_TCPPORT': value => $nfs::lockd_tcpport } }
+  if $nfs::configure_ports { shellvar { 'LOCKD_UDPPORT': value => $nfs::lockd_udpport } }
+  if $nfs::configure_ports { shellvar { 'STATD_PORT': value => $nfs::statd_port } }
 
   if $nfs::server {
-    shellvar { 'RQUOTAD_PORT': value => $nfs::rquotad_port }
-    shellvar { 'MOUNTD_PORT': value => $nfs::mountd_port }
+    if $nfs::configure_ports { shellvar { 'RQUOTAD_PORT': value => $nfs::rquotad_port } }
+    if $nfs::configure_ports { shellvar { 'MOUNTD_PORT': value => $nfs::mountd_port } }
     shellvar { 'RPCNFSDCOUNT': value => $nfs::rpc_nfsd_count }
     if $nfs::rpc_nfsd_args {
       shellvar { 'RPCNFSDARGS': value => $nfs::rpc_nfsd_args }

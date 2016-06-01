@@ -15,6 +15,7 @@ class nfs (
   $manage_firewall            = true,
   $firewall_iniface           = undef,
   $firewall_source            = undef,
+  $configure_ports            = true,
   $portmapper_port            = $nfs::params::portmapper_port,
   $lockd_tcpport              = $nfs::params::lockd_tcpport,
   $lockd_udpport              = $nfs::params::lockd_udpport,
@@ -53,6 +54,7 @@ class nfs (
   validate_bool(
     $server,
     $manage_firewall,
+    $configure_ports,
     $manage_rpcbind,
     $manage_idmapd,
     $enable_idmapd,

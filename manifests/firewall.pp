@@ -41,6 +41,24 @@ class nfs::firewall {
       iniface => $nfs::firewall_iniface,
       source  => $nfs::firewall_source,
     }
+    firewall { '105 statd tcp':
+      ensure  => 'present',
+      action  => 'accept',
+      dport   => $nfs::statd_port,
+      chain   => 'INPUT',
+      proto   => 'tcp',
+      iniface => $nfs::firewall_iniface,
+      source  => $nfs::firewall_source,
+    }
+    firewall { '106 statd udp':
+      ensure  => 'present',
+      action  => 'accept',
+      dport   => $nfs::statd_port,
+      chain   => 'INPUT',
+      proto   => 'udp',
+      iniface => $nfs::firewall_iniface,
+      source  => $nfs::firewall_source,
+    }
   }
 
   if $nfs::manage_firewall and $nfs::server {

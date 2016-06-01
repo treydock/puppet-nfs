@@ -2,6 +2,7 @@ def client_default_firewall_resources
   [
     {:name => 'portmapper', :number => ['101','102'], :port => '111'},
     {:name => 'lockd', :number => ['103','104'], :port => ['32803','32769']},
+    {:name => 'statd', :number => ['105', '106'], :port => '662'},
   ]
 end
 
@@ -20,7 +21,7 @@ def rdma_firewall_resources
 end
 
 shared_examples "nfs::firewall" do |facts|
-  it { should have_firewall_resource_count(4) }
+  it { should have_firewall_resource_count(6) }
 
   client_default_firewall_resources.each do |firewall|
     it do
@@ -47,7 +48,7 @@ shared_examples "nfs::firewall" do |facts|
   context "when server => true" do
     let(:params) {{ :server => true }}
 
-    it { should have_firewall_resource_count(10) }
+    it { should have_firewall_resource_count(12) }
 
     server_default_firewall_resources.each do |firewall|
       it do
@@ -74,7 +75,7 @@ shared_examples "nfs::firewall" do |facts|
     context "with with_rdma => true" do
       let(:params) {{ :server => true, :with_rdma => true }}
 
-      it { should have_firewall_resource_count(12) }
+      it { should have_firewall_resource_count(14) }
 
       rdma_firewall_resources.each do |firewall|
         it do
