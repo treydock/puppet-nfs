@@ -19,6 +19,7 @@ class nfs (
   $portmapper_port            = $nfs::params::portmapper_port,
   $lockd_tcpport              = $nfs::params::lockd_tcpport,
   $lockd_udpport              = $nfs::params::lockd_udpport,
+  $statd_port                 = $nfs::params::statd_port,
   $service_config_path        = $nfs::params::service_config_path,
   $nfsmount_config_path       = $nfs::params::nfsmount_config_path,
   $global_defaultvers         = 'UNSET',
