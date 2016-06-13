@@ -3,7 +3,7 @@ shared_examples 'nfs::service' do |facts|
   when '7'
     lock_service    = 'rpc-statd'
     rpc_service     = 'rpcbind'
-    idmap_service   = 'nfs-idmap'
+    idmap_service   = 'nfs-idmapd'
     server_service  = 'nfs-server'
   when '6'
     lock_service    = 'nfslock'

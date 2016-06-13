@@ -36,7 +36,7 @@ class nfs::params {
         $lock_service_name          = 'rpc-statd'
         $rpc_package_name           = 'rpcbind'
         $rpc_service_name           = 'rpcbind'
-        $idmap_service_name         = 'nfs-idmap'
+        $idmap_service_name         = 'nfs-idmapd'
         $server_service_name        = 'nfs-server'
       } elsif versioncmp($::operatingsystemrelease, '6.0') < 0 {
         $has_netfs                  = true
