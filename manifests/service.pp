@@ -59,13 +59,18 @@ class nfs::service {
   }
 
   if $nfs::manage_idmapd {
+    # lint:ignore:selector_inside_resource
     service { 'rpcidmapd':
       ensure     => $nfs::idmapd_service_ensure,
-      enable     => $nfs::idmapd_service_enable,
+      enable     => $nfs::params::idmapd_can_enable ? {
+        false   => undef,
+        default => $nfs::idmapd_service_enable,
+      },
       name       => $nfs::idmap_service_name,
       hasstatus  => true,
       hasrestart => true,
     }
+    # lint:endignore
   }
 
 }

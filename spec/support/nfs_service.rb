@@ -2,18 +2,24 @@ shared_examples 'nfs::service' do |facts|
   case facts[:operatingsystemmajrelease]
   when '7'
     idmapd          = false
+    idmapd_enabled  = nil
+    idmapd_disabled = nil
     lock_service    = 'rpc-statd'
     rpc_service     = 'rpcbind'
     idmap_service   = 'nfs-idmapd'
     server_service  = 'nfs-server'
   when '6'
     idmapd          = true
+    idmapd_enabled  = 'true'
+    idmapd_disabled = 'false'
     lock_service    = 'nfslock'
     rpc_service     = 'rpcbind'
     idmap_service   = 'rpcidmapd'
     server_service  = 'nfs'
   when '5'
     idmapd          = true
+    idmapd_enabled  = 'true'
+    idmapd_disabled = 'false'
     lock_service    = 'nfslock'
     rpc_service     = 'portmap'
     idmap_service   = 'rpcidmapd'
@@ -60,7 +66,7 @@ shared_examples 'nfs::service' do |facts|
     it do
       should contain_service('rpcidmapd').with({
         :ensure      => 'running',
-        :enable      => 'true',
+        :enable      => idmapd_enabled,
         :hasstatus   => 'true',
         :hasrestart  => 'true',
         :name        => idmap_service,
@@ -70,7 +76,7 @@ shared_examples 'nfs::service' do |facts|
     it do
       should contain_service('rpcidmapd').with({
         :ensure      => 'stopped',
-        :enable      => 'false',
+        :enable      => idmapd_disabled,
         :hasstatus   => 'true',
         :hasrestart  => 'true',
         :name        => idmap_service,
@@ -84,7 +90,7 @@ shared_examples 'nfs::service' do |facts|
     it 'rpcidmapd should be stopped and disabled' do
       should contain_service('rpcidmapd').with({
         :ensure => 'stopped',
-        :enable => 'false',
+        :enable => idmapd_disabled,
       })
     end
   end
@@ -117,7 +123,7 @@ shared_examples 'nfs::service' do |facts|
     it do
       should contain_service('rpcidmapd').with({
         :ensure      => 'running',
-        :enable      => 'true',
+        :enable      => idmapd_enabled,
         :hasstatus   => 'true',
         :hasrestart  => 'true',
         :name        => idmap_service,
