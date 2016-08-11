@@ -24,6 +24,10 @@
     {
       "name": "herculesteam/augeasproviders_shellvar",
       "version_requirement": ">= 2.0.4"
+    },
+    {
+      "name": "herculesteam/augeasproviders_sysctl",
+      "version_requirement": ">= 2.0.0 <3.0.0"
     }
   ],
   "operatingsystem_support": [

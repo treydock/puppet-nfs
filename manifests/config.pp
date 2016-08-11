@@ -74,4 +74,10 @@ class nfs::config {
     idmapd_config { 'General/Domain': value => $nfs::idmapd_domain }
   }
 
+  if $nfs::nfs_callback_tcpport {
+    sysctl { 'fs.nfs.nfs_callback_tcpport':
+      value => $nfs::nfs_callback_tcpport,
+    }
+  }
+
 }

@@ -59,6 +59,17 @@ class nfs::firewall {
       iniface => $nfs::firewall_iniface,
       source  => $nfs::firewall_source,
     }
+    if $nfs::nfs_callback_tcpport {
+      firewall { '107 nfs_callback_tcpport':
+        ensure  => 'present',
+        action  => 'accept',
+        dport   => $nfs::nfs_callback_tcpport,
+        chain   => 'INPUT',
+        proto   => 'tcp',
+        iniface => $nfs::firewall_iniface,
+        source  => $nfs::firewall_source,
+      }
+    }
   }
 
   if $nfs::manage_firewall and $nfs::server {

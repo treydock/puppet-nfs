@@ -107,11 +107,23 @@ shared_examples 'nfs::config' do |facts|
     end
   end
 
+  it { should_not contain_sysctl('fs.nfs.nfs_callback_tcpport') }
+
   context 'when enable_idmapd => false' do
     let(:params) {{ :enable_idmapd => false }}
 
     it 'idmapd_config should not notify' do
       should contain_idmapd_config('General/Domain').without_notify
+    end
+  end
+
+  context 'when nfs_callback_tcpport => 62049' do
+    let(:params) {{ :nfs_callback_tcpport => '62049' }}
+
+    it do
+      should contain_sysctl('fs.nfs.nfs_callback_tcpport').with({
+        :value => '62049',
+      })
     end
   end
 
