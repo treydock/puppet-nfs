@@ -1,4 +1,13 @@
 shared_examples 'nfs::config' do |facts|
+  case facts[:operatingsystemmajrelease]
+  when '7'
+    idmapd_notify = false
+  when '6'
+    idmapd_notify = true
+  when '5'
+    idmapd_notify = true
+  end
+
   it do
     should contain_file('/etc/sysconfig/nfs').with({
       :ensure => 'file',
@@ -87,8 +96,15 @@ shared_examples 'nfs::config' do |facts|
   it do
     should contain_idmapd_config('General/Domain').with({
       :value  => 'example.com',
-      :notify => 'Service[rpcidmapd]',
     })
+  end
+
+  it do
+    if idmapd_notify
+      should contain_idmapd_config('General/Domain').with_notify('Service[rpcidmapd]')
+    else
+      should contain_idmapd_config('General/Domain').without_notify
+    end
   end
 
   context 'when enable_idmapd => false' do

@@ -1,16 +1,19 @@
 shared_examples 'nfs::service' do |facts|
   case facts[:operatingsystemmajrelease]
   when '7'
+    idmapd          = false
     lock_service    = 'rpc-statd'
     rpc_service     = 'rpcbind'
     idmap_service   = 'nfs-idmapd'
     server_service  = 'nfs-server'
   when '6'
+    idmapd          = true
     lock_service    = 'nfslock'
     rpc_service     = 'rpcbind'
     idmap_service   = 'rpcidmapd'
     server_service  = 'nfs'
   when '5'
+    idmapd          = true
     lock_service    = 'nfslock'
     rpc_service     = 'portmap'
     idmap_service   = 'rpcidmapd'
@@ -53,14 +56,26 @@ shared_examples 'nfs::service' do |facts|
 
   it { should_not contain_service('nfs') }
 
-  it do
-    should contain_service('rpcidmapd').with({
-      :ensure      => 'running',
-      :enable      => 'true',
-      :hasstatus   => 'true',
-      :hasrestart  => 'true',
-      :name        => idmap_service,
-    })
+  if idmapd
+    it do
+      should contain_service('rpcidmapd').with({
+        :ensure      => 'running',
+        :enable      => 'true',
+        :hasstatus   => 'true',
+        :hasrestart  => 'true',
+        :name        => idmap_service,
+      })
+    end
+  else
+    it do
+      should contain_service('rpcidmapd').with({
+        :ensure      => 'stopped',
+        :enable      => 'false',
+        :hasstatus   => 'true',
+        :hasrestart  => 'true',
+        :name        => idmap_service,
+      })
+    end
   end
 
   context 'when enable_idmapd => false' do
@@ -98,6 +113,16 @@ shared_examples 'nfs::service' do |facts|
     end
 
     it { should_not contain_service('nfs-rdma') }
+
+    it do
+      should contain_service('rpcidmapd').with({
+        :ensure      => 'running',
+        :enable      => 'true',
+        :hasstatus   => 'true',
+        :hasrestart  => 'true',
+        :name        => idmap_service,
+      })
+    end
 
     context 'with service_autorestart => false' do
       let(:params) {{ :server => true, :server_service_autorestart => false }}

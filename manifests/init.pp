@@ -34,7 +34,7 @@ class nfs (
   $manage_rpcbind             = true,
   $has_netfs                  = $nfs::params::has_netfs,
   $manage_idmapd              = true,
-  $enable_idmapd              = true,
+  $enable_idmapd              = undef,
   $idmapd_config_path         = $nfs::params::idmapd_config_path,
   $idmapd_domain              = $::domain,
   $server_service_ensure      = undef,
@@ -58,7 +58,6 @@ class nfs (
     $configure_ports,
     $manage_rpcbind,
     $manage_idmapd,
-    $enable_idmapd,
     $server_service_autorestart,
     $with_rdma
   )
@@ -69,7 +68,19 @@ class nfs (
     $exports
   )
 
-  if $enable_idmapd {
+  if $server {
+    $_enable_idmapd_default = true
+  } else {
+    if $nfs::params::client_uses_idmapd {
+      $_enable_idmapd_default = true
+    } else {
+      $_enable_idmapd_default = false
+    }
+  }
+
+  $_enable_idmapd = pick($enable_idmapd, $_enable_idmapd_default)
+
+  if $_enable_idmapd {
     $idmapd_service_ensure = 'running'
     $idmapd_service_enable = true
     $idmapd_config_notify  = Service['rpcidmapd']
