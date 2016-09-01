@@ -54,12 +54,13 @@ define nfs::mount (
   }
 
   mount { $title:
-    ensure  => $ensure,
-    name    => $path,
-    atboot  => $atboot,
-    device  => $device,
-    fstype  => 'nfs',
-    options => $options_real,
-    require => Package['nfs'],
+    ensure   => $ensure,
+    name     => $path,
+    atboot   => $atboot,
+    device   => $device,
+    fstype   => 'nfs',
+    options  => $options_real,
+    remounts => false,
+    require  => Package['nfs'],
   }
 }
