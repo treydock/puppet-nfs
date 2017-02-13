@@ -28,6 +28,8 @@ define nfs::mount (
   $mode             = undef,
 ) {
 
+  include nfs
+
   validate_bool($manage_directory)
 
   $options_real = is_array($options) ? {
