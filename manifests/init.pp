@@ -12,6 +12,7 @@
 #
 class nfs (
   $server                     = false,
+  $package_ensure             = 'present',
   $manage_firewall            = true,
   $firewall_iniface           = undef,
   $firewall_source            = undef,

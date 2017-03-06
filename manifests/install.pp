@@ -5,7 +5,7 @@ class nfs::install {
   }
 
   package { 'nfs':
-    ensure => 'present',
+    ensure => $nfs::package_ensure,
     name   => $nfs::params::package_name,
   }
 
