@@ -6,6 +6,7 @@ shared_examples 'nfs::service' do |facts|
     idmapd_disabled = nil
     lock_service    = 'rpc-statd'
     rpc_service     = 'rpcbind'
+    rpc_enabled     = nil
     idmap_service   = 'nfs-idmapd'
     server_service  = 'nfs-server'
   when '6'
@@ -14,6 +15,7 @@ shared_examples 'nfs::service' do |facts|
     idmapd_disabled = 'false'
     lock_service    = 'nfslock'
     rpc_service     = 'rpcbind'
+    rpc_enabled     = 'true'
     idmap_service   = 'rpcidmapd'
     server_service  = 'nfs'
   when '5'
@@ -22,6 +24,7 @@ shared_examples 'nfs::service' do |facts|
     idmapd_disabled = 'false'
     lock_service    = 'nfslock'
     rpc_service     = 'portmap'
+    rpc_enabled     = 'true'
     idmap_service   = 'rpcidmapd'
     server_service  = 'nfs'
   end
@@ -41,7 +44,7 @@ shared_examples 'nfs::service' do |facts|
   it do
     should contain_service('rpcbind').with({
       :ensure     => 'running',
-      :enable     => 'true',
+      :enable     => rpc_enabled,
       :name       => rpc_service,
       :hasstatus  => 'true',
       :hasrestart => 'true',

@@ -28,14 +28,19 @@ class nfs::service {
   }
 
   if $nfs::manage_rpcbind {
+    # lint:ignore:selector_inside_resource
     service { 'rpcbind':
       ensure     => $nfs::rpc_service_ensure,
-      enable     => $nfs::rpc_service_enable,
+      enable     => $nfs::params::rpcbind_can_enable ? {
+        false   => undef,
+        default => $nfs::rpc_service_enable,
+      },
       name       => $nfs::rpc_service_name,
       hasstatus  => $nfs::rpc_service_hasstatus,
       hasrestart => $nfs::rpc_service_hasrestart,
       before     => Service['nfslock'],
     }
+    # lint:endignore
   }
 
   service { 'nfslock':

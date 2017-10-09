@@ -38,6 +38,7 @@ class nfs::params {
         $lock_service_name          = 'rpc-statd'
         $rpc_package_name           = 'rpcbind'
         $rpc_service_name           = 'rpcbind'
+        $rpcbind_can_enable         = false
         $idmap_service_name         = 'nfs-idmapd'
         $server_service_name        = 'nfs-server'
       } elsif versioncmp($::operatingsystemrelease, '6.0') < 0 {
@@ -47,6 +48,7 @@ class nfs::params {
         $lock_service_name          = 'nfslock'
         $rpc_package_name           = 'portmap'
         $rpc_service_name           = 'portmap'
+        $rpcbind_can_enable         = true
         $idmap_service_name         = 'rpcidmapd'
         $server_service_name        = 'nfs'
       } else {
@@ -56,6 +58,7 @@ class nfs::params {
         $lock_service_name          = 'nfslock'
         $rpc_package_name           = 'rpcbind'
         $rpc_service_name           = 'rpcbind'
+        $rpcbind_can_enable         = true
         $idmap_service_name         = 'rpcidmapd'
         $server_service_name        = 'nfs'
       }
