@@ -99,13 +99,13 @@ class nfs (
   include nfs::exports
   include nfs::resources
 
-  anchor { 'nfs::start': }->
-  Class['nfs::install']->
-  Class['nfs::config']->
-  Class['nfs::service']->
-  Class['nfs::firewall']->
-  Class['nfs::exports']->
-  Class['nfs::resources']->
-  anchor { 'nfs::end': }
+  anchor { 'nfs::start': }
+  -> Class['nfs::install']
+  -> Class['nfs::config']
+  -> Class['nfs::service']
+  -> Class['nfs::firewall']
+  -> Class['nfs::exports']
+  -> Class['nfs::resources']
+  -> anchor { 'nfs::end': }
 
 }
