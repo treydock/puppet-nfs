@@ -7,7 +7,6 @@ describe 'nfs::mount' do
       {
         'operatingsystem' => 'CentOS',
         'operatingsystemrelease'  => [
-          '5',
           '6',
           '7',
         ]
