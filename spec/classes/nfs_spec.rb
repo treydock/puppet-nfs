@@ -34,39 +34,6 @@ describe 'nfs' do
       it_behaves_like 'nfs::firewall', facts
       it_behaves_like 'nfs::exports', facts
       it_behaves_like 'nfs::resources', facts
-
-      context 'validations' do
-        # Test boolean validation
-        [
-          :server,
-          :manage_firewall,
-          :manage_rpcbind,
-          :manage_idmapd,
-          :server_service_autorestart,
-          :with_rdma,
-        ].each do |param|
-          context "with #{param} => 'foo'" do
-            let(:params) {{ param => 'foo' }}
-            it "should raise an error" do
-              expect { should compile }.to raise_error(/is not a boolean/)
-            end
-          end
-        end
-
-        # Test hash validation
-        [
-          :nfs_mounts,
-          :nfsmount_configs,
-          :exports,
-        ].each do |param|
-          context "with #{param} => 'foo'" do
-            let(:params) {{ param => 'foo' }}
-            it "should raise an error" do
-              expect { should compile }.to raise_error(/is not a Hash/)
-            end
-          end
-        end
-      end # end validations
     end
   end
 

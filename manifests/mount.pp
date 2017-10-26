@@ -18,22 +18,20 @@
 #
 define nfs::mount (
   $device,
-  $ensure           = 'mounted',
-  $atboot           = true,
-  $path             = $title,
-  $options          = 'rw',
-  $manage_directory = true,
-  $owner            = undef,
-  $group            = undef,
-  $mode             = undef,
+  $ensure                   = 'mounted',
+  $atboot                   = true,
+  $path                     = $title,
+  $options                  = 'rw',
+  Boolean $manage_directory = true,
+  $owner                    = undef,
+  $group                    = undef,
+  $mode                     = undef,
 ) {
 
   include nfs
 
-  validate_bool($manage_directory)
-
-  $options_real = is_array($options) ? {
-    true    => join($options, ','),
+  $options_real = $options ? {
+    Array   => join($options, ','),
     default => $options,
   }
 
