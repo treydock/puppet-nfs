@@ -4,17 +4,27 @@ class nfs::config {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  $shellvar_notify = $nfs::server ? {
+  $config_notify = $nfs::server ? {
     true  => [ Service['nfslock'], Service['nfs'] ],
     false => Service['nfslock'],
   }
 
-  file { '/etc/sysconfig/nfs':
-    ensure => 'file',
-    path   => $nfs::service_config_path,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+  if $nfs::params::config == 'nfs_config' {
+    file { '/etc/nfs.conf':
+      ensure => 'file',
+      path   => $nfs::service_config_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
+  } else {
+    file { '/etc/sysconfig/nfs':
+      ensure => 'file',
+      path   => $nfs::service_config_path,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
   }
 
   file { '/etc/nfsmount.conf':
@@ -33,26 +43,55 @@ class nfs::config {
     mode   => '0644',
   }
 
-  Shellvar {
-    ensure  => 'present',
-    target  => $nfs::service_config_path,
-    notify  => $shellvar_notify,
+  if $nfs::params::config == 'nfs_config' {
+    Nfs_config {
+      ensure  => 'present',
+      notify  => $config_notify,
+    }
+  } else {
+    Shellvar {
+      ensure  => 'present',
+      target  => $nfs::service_config_path,
+      notify  => $config_notify,
+    }
   }
 
-  if $nfs::configure_ports { shellvar { 'LOCKD_TCPPORT': value => $nfs::lockd_tcpport } }
-  if $nfs::configure_ports { shellvar { 'LOCKD_UDPPORT': value => $nfs::lockd_udpport } }
-  if $nfs::configure_ports { shellvar { 'STATD_PORT': value => $nfs::statd_port } }
+  if $nfs::configure_ports {
+    if $nfs::params::config == 'nfs_config' {
+      nfs_config { 'lockd/port': value => $nfs::lockd_tcpport }
+      nfs_config { 'lockd/udp-port': value => $nfs::lockd_udpport }
+      nfs_config { 'statd/port': value => $nfs::statd_port }
+    } else {
+      shellvar { 'LOCKD_TCPPORT': value => $nfs::lockd_tcpport }
+      shellvar { 'LOCKD_UDPPORT': value => $nfs::lockd_udpport }
+      shellvar { 'STATD_PORT': value => $nfs::statd_port }
+    }
+  }
 
   if $nfs::server {
-    if $nfs::configure_ports { shellvar { 'RQUOTAD_PORT': value => $nfs::rquotad_port } }
-    if $nfs::configure_ports { shellvar { 'MOUNTD_PORT': value => $nfs::mountd_port } }
-    shellvar { 'RPCNFSDCOUNT': value => $nfs::rpc_nfsd_count }
-    if $nfs::rpc_nfsd_args {
+    if $nfs::configure_ports {
+      if $nfs::params::config == 'nfs_config' {
+        nfs_config { 'mountd/port': value => $nfs::mountd_port }
+      } else {
+        shellvar { 'RQUOTAD_PORT': value => $nfs::rquotad_port }
+        shellvar { 'MOUNTD_PORT': value => $nfs::mountd_port }
+      }
+    }
+    if $nfs::params::config == 'nfs_config' {
+      nfs_config { 'nfsd/threads': value => $nfs::rpc_nfsd_count }
+    } else {
+      shellvar { 'RPCNFSDCOUNT': value => $nfs::rpc_nfsd_count }
+    }
+    if $nfs::rpc_nfsd_args and $nfs::params::config == 'shellvar' {
       shellvar { 'RPCNFSDARGS': value => $nfs::rpc_nfsd_args }
     }
 
     if $nfs::with_rdma {
-      shellvar { 'RDMA_PORT': value => $nfs::rdma_port }
+      if $nfs::params::config == 'nfs_config' {
+        nfs_config { 'nfsd/rdma': value => 'y' }
+      } else {
+        shellvar { 'RDMA_PORT': value => $nfs::rdma_port }
+      }
     }
   }
 

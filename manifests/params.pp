@@ -24,13 +24,19 @@ class nfs::params {
     'RedHat': {
       $package_name                 = 'nfs-utils'
       $nfs4_acl_tools_package_name  = 'nfs4-acl-tools'
-      $service_config_path          = '/etc/sysconfig/nfs'
       $nfsmount_config_path         = '/etc/nfsmount.conf'
       $idmapd_config_path           = '/etc/idmapd.conf'
       $server_service_hasstatus     = true
       $server_service_hasrestart    = true
       $lock_service_hasstatus       = true
       $lock_service_hasrestart      = true
+      if versioncmp($::operatingsystemrelease, '8.0') >= 0 {
+        $config               = 'nfs_config'
+        $service_config_path  = '/etc/nfs.conf'
+      } else {
+        $config               = 'shellvar'
+        $service_config_path  = '/etc/sysconfig/nfs'
+      }
       if versioncmp($::operatingsystemrelease, '7.0') >= 0 {
         $has_netfs                  = false
         $client_uses_idmapd         = false
