@@ -28,8 +28,6 @@ define nfs::mount (
   $mode                     = undef,
 ) {
 
-  include nfs
-
   $options_real = $options ? {
     Array   => join($options, ','),
     default => $options,
@@ -61,6 +59,5 @@ define nfs::mount (
     fstype   => 'nfs',
     options  => $options_real,
     remounts => false,
-    require  => Package['nfs'],
   }
 }

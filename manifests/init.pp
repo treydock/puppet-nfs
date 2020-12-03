@@ -92,4 +92,5 @@ class nfs (
   -> Class['nfs::resources']
   -> anchor { 'nfs::end': }
 
+  Package['nfs'] -> Nfs::Mount <| |>
 }
