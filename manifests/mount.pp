@@ -35,7 +35,7 @@ define nfs::mount (
     default => $options,
   }
 
-  if ! defined(File[$path]) and $manage_directory {
+  if $ensure != 'absent' and ! defined(File[$path]) and $manage_directory {
     exec { "mkdir-${title}":
       path    => '/bin:/usr/bin:/sbin:/usr/sbin',
       command => "mkdir -p ${path}",
